@@ -1,9 +1,9 @@
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
-const User = require("./models/UserModel");
-const Role = require("./models/RoleModel");
-const bcrypt = require("bcrypt");
-const { CONFIG_PERMISSIONS } = require("./configs");
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+const User = require('./models/UserModel');
+const Role = require('./models/RoleModel');
+const bcrypt = require('bcrypt');
+const { CONFIG_PERMISSIONS } = require('./configs');
 
 const initializeDB = async () => {
   try {
@@ -14,25 +14,24 @@ const initializeDB = async () => {
         useUnifiedTopology: true,
       })
       .then(async () => {
-       
         const defaultAdminRole = new Role({
-          name: "Admin",
+          name: 'Admin',
           permissions: [CONFIG_PERMISSIONS.ADMIN],
         });
 
         const defaultBasicRole = new Role({
-          name: "Basic",
+          name: 'Basic',
           permissions: [CONFIG_PERMISSIONS.BASIC],
         });
 
         await defaultAdminRole.save();
         await defaultBasicRole.save();
 
-        const hash = bcrypt.hashSync("123456789Kha@", 10);
-        const roleAdmin = await Role.findOne({ name: "Admin" });
+        const hash = bcrypt.hashSync('0773094710@Trong', 10);
+        const roleAdmin = await Role.findOne({ name: 'Admin' });
         if (roleAdmin) {
           const defaultUser = new User({
-            email: "admin@gmail.com",
+            email: 'admin@gmail.com',
             password: hash,
             role: roleAdmin,
           });
@@ -40,14 +39,14 @@ const initializeDB = async () => {
         }
       })
       .then(() => {
-        console.log("Init Database success");
+        console.log('Init Database success');
         mongoose.connection.close();
       })
       .catch((e) => {
-        console.log("Error init data", e);
+        console.log('Error init data', e);
       });
   } catch (error) {
-    console.log("Error init data", error);
+    console.log('Error init data', error);
   }
 };
 
