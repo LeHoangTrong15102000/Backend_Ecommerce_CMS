@@ -1,8 +1,8 @@
-const AuthService = require("../services/AuthService");
-const JwtService = require("../services/JwtService");
-const UserService = require("../services/UserService");
-const { validateRequiredInput } = require("../utils");
-const { CONFIG_MESSAGE_ERRORS } = require("../configs");
+const AuthService = require('../services/AuthService');
+const JwtService = require('../services/JwtService');
+const UserService = require('../services/UserService');
+const { validateRequiredInput } = require('../utils');
+const { CONFIG_MESSAGE_ERRORS } = require('../configs');
 
 const registerUser = async (req, res) => {
   try {
@@ -13,26 +13,23 @@ const registerUser = async (req, res) => {
     const isCheckEmail = REGEX_EMAIL.test(email);
     const isCheckPassword = REGEX_PASSWORD.test(password);
 
-    const requiredFields = validateRequiredInput(req.body, [
-      "email",
-      "password",
-    ]);
+    const requiredFields = validateRequiredInput(req.body, ['email', 'password']);
 
     if (requiredFields?.length) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
-        message: `The field ${requiredFields.join(", ")} is required`,
+        message: `The field ${requiredFields.join(', ')} is required`,
       });
     } else if (!isCheckEmail) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "INVALID",
+        status: 'INVALID',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
-        message: "The field must a email",
+        message: 'The field must a email',
       });
     } else if (!isCheckPassword) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
         message:
           'The password must be at least 6 characters long and include uppercase letters, lowercase letters, numbers, and special characters."',
@@ -47,11 +44,11 @@ const registerUser = async (req, res) => {
       status: statusMessage,
     });
   } catch (e) {
-    console.log("e", e);
+    console.log('e', e);
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
       typeError: CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.type,
     });
   }
@@ -65,26 +62,23 @@ const loginUser = async (req, res) => {
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
     const isCheckEmail = REGEX_EMAIL.test(email);
     const isCheckPassword = REGEX_PASSWORD.test(password);
-    const requiredFields = validateRequiredInput(req.body, [
-      "email",
-      "password",
-    ]);
+    const requiredFields = validateRequiredInput(req.body, ['email', 'password']);
 
     if (requiredFields?.length) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
-        message: `The field ${requiredFields.join(", ")} is required`,
+        message: `The field ${requiredFields.join(', ')} is required`,
       });
     } else if (!isCheckEmail) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "INVALID",
+        status: 'INVALID',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
-        message: "The field must a email",
+        message: 'The field must a email',
       });
     } else if (!isCheckPassword) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
         message:
           'The password must be at least 6 characters long and include uppercase letters, lowercase letters, numbers, and special characters."',
@@ -100,11 +94,11 @@ const loginUser = async (req, res) => {
       access_token,
       refresh_token,
     } = response;
-    res.cookie("refresh_token", refresh_token, {
+    res.cookie('refresh_token', refresh_token, {
       httpOnly: true,
       secure: false,
-      sameSite: "strict",
-      path: "/",
+      sameSite: 'strict',
+      path: '/',
     });
     return res.status(status).json({
       typeError,
@@ -118,20 +112,20 @@ const loginUser = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      typeError: "Internal Server Error",
+      typeError: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
     });
   }
 };
 
 const refreshToken = async (req, res) => {
   try {
-    const token = req.headers["authorization"].split(" ")[1];
+    const token = req.headers['authorization'].split(' ')[1];
     if (!token) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
-        message: "Unauthorized",
+        status: 'Error',
+        message: 'Unauthorized',
         typeError: CONFIG_MESSAGE_ERRORS.UNAUTHORIZED.type,
         data: null,
       });
@@ -146,16 +140,16 @@ const refreshToken = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      typeError: "Internal Server Error",
+      typeError: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
     });
   }
 };
 
 const logoutUser = async (req, res) => {
   try {
-    const accessToken = req.headers?.authorization?.split(" ")[1];
+    const accessToken = req.headers?.authorization?.split(' ')[1];
     const response = await AuthService.logoutUser(res, accessToken);
     const { data, status, typeError, message, statusMessage } = response;
     return res.status(status).json({
@@ -166,9 +160,9 @@ const logoutUser = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      typeError: "Internal Server Error",
+      typeError: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
     });
   }
 };
@@ -176,7 +170,7 @@ const logoutUser = async (req, res) => {
 const getAuthMe = async (req, res) => {
   try {
     const userId = req.userId;
-    console.log("userId", {userId})
+    console.log('userId', { userId });
     const response = await UserService.getDetailsUser(userId);
     const { data, status, typeError, message, statusMessage } = response;
     return res.status(status).json({
@@ -187,9 +181,9 @@ const getAuthMe = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      typeError: "Internal Server Error",
+      typeError: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
     });
   }
 };
@@ -198,11 +192,7 @@ const updateAuthMe = async (req, res) => {
   try {
     const userId = req.userId;
     const isPermission = req.isPermission;
-    const response = await AuthService.updateAuthMe(
-      userId,
-      req.body,
-      isPermission
-    );
+    const response = await AuthService.updateAuthMe(userId, req.body, isPermission);
     const { data, status, typeError, message, statusMessage } = response;
     return res.status(status).json({
       typeError,
@@ -212,9 +202,9 @@ const updateAuthMe = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      typeError: "Internal Server Error",
+      typeError: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
     });
   }
 };
@@ -224,16 +214,16 @@ const changePasswordMe = async (req, res) => {
     const userId = req.userId;
     const newPassword = req.body.newPassword;
     const currentPassword = req.body.currentPassword;
-    const requiredFields = validateRequiredInput(
-      { currentPassword, newPassword },
-      ["currentPassword", "newPassword"]
-    );
-    const accessToken = req?.headers?.authorization?.split(" ")[1];
+    const requiredFields = validateRequiredInput({ currentPassword, newPassword }, [
+      'currentPassword',
+      'newPassword',
+    ]);
+    const accessToken = req?.headers?.authorization?.split(' ')[1];
     if (requiredFields?.length) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
-        message: `The field ${requiredFields.join(", ")} is required`,
+        message: `The field ${requiredFields.join(', ')} is required`,
       });
     }
     const response = await AuthService.changePasswordMe(
@@ -250,11 +240,11 @@ const changePasswordMe = async (req, res) => {
       status: statusMessage,
     });
   } catch (e) {
-    console.log("e", e);
+    console.log('e', e);
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      typeError: "Internal Server Error",
+      typeError: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
     });
   }
 };
@@ -265,7 +255,7 @@ const forgotPasswordMe = async (req, res) => {
 
     if (!email) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
         message: `The field email is required`,
         data: null,
@@ -280,11 +270,11 @@ const forgotPasswordMe = async (req, res) => {
       status: statusMessage,
     });
   } catch (e) {
-    console.log("e", e);
+    console.log('e', e);
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      typeError: "Internal Server Error",
+      typeError: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
     });
   }
 };
@@ -293,14 +283,14 @@ const resetPasswordMe = async (req, res) => {
   try {
     const { secretKey, newPassword } = req.body;
     const requiredFields = validateRequiredInput({ secretKey, newPassword }, [
-      "secretKey",
-      "newPassword",
+      'secretKey',
+      'newPassword',
     ]);
     if (requiredFields?.length) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
-        message: `The field ${requiredFields.join(", ")} is required`,
+        message: `The field ${requiredFields.join(', ')} is required`,
       });
     }
 
@@ -313,11 +303,11 @@ const resetPasswordMe = async (req, res) => {
       status: statusMessage,
     });
   } catch (e) {
-    console.log("e", e);
+    console.log('e', e);
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      typeError: "Internal Server Error",
+      typeError: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
     });
   }
 };
@@ -328,7 +318,7 @@ const registerGoogle = async (req, res) => {
 
     if (idToken) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
         message: `The idToken is required`,
       });
@@ -344,9 +334,9 @@ const registerGoogle = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      typeError: "Internal Server Error",
+      typeError: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
     });
   }
 };
@@ -357,7 +347,7 @@ const loginGoogle = async (req, res) => {
 
     if (idToken) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
         message: `The idToken is required`,
       });
@@ -373,9 +363,9 @@ const loginGoogle = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      typeError: "Internal Server Error",
+      typeError: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
     });
   }
 };
@@ -385,7 +375,7 @@ const registerFacebook = async (req, res) => {
     const { idToken } = req.body;
     if (!idToken) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
         message: `The field idToken is required`,
       });
@@ -401,9 +391,9 @@ const registerFacebook = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      typeError: "Internal Server Error",
+      typeError: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
     });
   }
 };
@@ -413,7 +403,7 @@ const loginFacebook = async (req, res) => {
     const { idToken } = req.body;
     if (!idToken) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
         message: `The field idToken is required`,
       });
@@ -429,9 +419,9 @@ const loginFacebook = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      typeError: "Internal Server Error",
+      typeError: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
     });
   }
 };
