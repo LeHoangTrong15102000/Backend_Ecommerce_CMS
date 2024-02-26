@@ -1,5 +1,5 @@
-const { CONFIG_MESSAGE_ERRORS } = require("../configs");
-const ProductType = require("../models/ProductType");
+const { CONFIG_MESSAGE_ERRORS } = require('../configs');
+const ProductType = require('../models/ProductType');
 
 const createProductType = (newProductType) => {
   return new Promise(async (resolve, reject) => {
@@ -11,10 +11,10 @@ const createProductType = (newProductType) => {
       if (checkProductType !== null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.status,
-          message: "The product type slug is existed",
+          message: 'The product type slug is existed',
           typeError: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       const newProductType = await ProductType.create({
@@ -24,10 +24,10 @@ const createProductType = (newProductType) => {
       if (newProductType) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-          message: "Created product type success",
-          typeError: "",
+          message: 'Created product type success',
+          typeError: '',
           data: newProductType,
-          statusMessage: "Success",
+          statusMessage: 'Success',
         });
       }
     } catch (e) {
@@ -46,10 +46,10 @@ const updateProductType = (id, data) => {
       if (!checkProductType) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The name of type product is not existed",
+          message: 'The name of type product is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
         return;
       }
@@ -63,10 +63,10 @@ const updateProductType = (id, data) => {
         if (existedName !== null) {
           resolve({
             status: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.status,
-            message: "The name of type product is existed",
+            message: 'The name of type product is existed',
             typeError: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.type,
             data: null,
-            statusMessage: "Error",
+            statusMessage: 'Error',
           });
           return;
         }
@@ -77,10 +77,10 @@ const updateProductType = (id, data) => {
       });
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Updated product type success",
-        typeError: "",
+        message: 'Updated product type success',
+        typeError: '',
         data: updatedProductType,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -97,20 +97,20 @@ const deleteProductType = (id) => {
       if (checkProductType === null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The product type is not existed",
+          message: 'The product type is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
 
       await ProductType.findByIdAndDelete(id);
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Deleted product type success",
-        typeError: "",
+        message: 'Deleted product type success',
+        typeError: '',
         data: checkProductType,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -124,10 +124,10 @@ const deleteManyProductType = (ids) => {
       await ProductType.deleteMany({ _id: ids });
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Delete product types success",
-        typeError: "",
+        message: 'Delete product types success',
+        typeError: '',
         data: null,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -144,18 +144,18 @@ const getDetailsProductType = (id) => {
       if (checkProductType === null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The product type is not existed",
+          message: 'The product type is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-        message: "Success",
-        typeError: "",
+        message: 'Success',
+        typeError: '',
         data: checkProductType,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -167,14 +167,14 @@ const getAllProductType = (params) => {
   return new Promise(async (resolve, reject) => {
     try {
       const limit = params?.limit ? +params?.limit : 10;
-      const search = params?.search ?? "";
-      const page = params?.page ?  +params.page :  1;
-      const order = params?.order ?? "created desc";
+      const search = params?.search ?? '';
+      const page = params?.page ? +params.page : 1;
+      const order = params?.order ?? 'created desc';
       const query = {};
       if (search) {
-        const searchRegex = { $regex: search, $options: "i" };
+        const searchRegex = { $regex: search, $options: 'i' };
 
-        query.$or = [{ name: searchRegex },{ slug: searchRegex }];
+        query.$or = [{ name: searchRegex }, { slug: searchRegex }];
       }
 
       const totalCount = await ProductType.countDocuments(query);
@@ -185,11 +185,9 @@ const getAllProductType = (params) => {
 
       let sortOptions = {};
       if (order) {
-        const orderFields = order
-          .split(",")
-          .map((field) => field.trim().split(" "));
+        const orderFields = order.split(',').map((field) => field.trim().split(' '));
         orderFields.forEach(([name, direction]) => {
-          sortOptions[name] = direction.toLowerCase() === "asc" ? 1 : -1;
+          sortOptions[name] = direction.toLowerCase() === 'asc' ? 1 : -1;
         });
       }
 
@@ -205,9 +203,9 @@ const getAllProductType = (params) => {
           .select(fieldsToSelect);
         resolve({
           status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-          message: "Success",
-          typeError: "",
-          statusMessage: "Success",
+          message: 'Success',
+          typeError: '',
+          statusMessage: 'Success',
           data: {
             productTypes: allProductType,
             totalPage: 1,
@@ -216,7 +214,7 @@ const getAllProductType = (params) => {
         });
         return;
       }
-      
+
       const allProductType = await ProductType.find(query)
         .skip(startIndex)
         .limit(limit)
@@ -224,9 +222,9 @@ const getAllProductType = (params) => {
         .select(fieldsToSelect);
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-        message: "Success",
-        typeError: "",
-        statusMessage: "Success",
+        message: 'Success',
+        typeError: '',
+        statusMessage: 'Success',
         data: {
           productTypes: allProductType,
           totalPage: totalPage,

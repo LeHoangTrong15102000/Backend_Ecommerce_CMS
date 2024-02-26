@@ -1,8 +1,8 @@
-const User = require("../models/UserModel");
-const bcrypt = require("bcrypt");
-const { CONFIG_MESSAGE_ERRORS, CONFIG_USER_TYPE } = require("../configs");
-const { isAdminPermission } = require("../utils");
-const mongoose = require("mongoose");
+const User = require('../models/UserModel');
+const bcrypt = require('bcrypt');
+const { CONFIG_MESSAGE_ERRORS, CONFIG_USER_TYPE } = require('../configs');
+const { isAdminPermission } = require('../utils');
+const mongoose = require('mongoose');
 
 const createUser = (newUser) => {
   return new Promise(async (resolve, reject) => {
@@ -25,10 +25,10 @@ const createUser = (newUser) => {
       if (existedUser !== null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.status,
-          message: "The email of user is existed",
+          message: 'The email of user is existed',
           typeError: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       const hash = bcrypt.hashSync(password, 10);
@@ -53,10 +53,10 @@ const createUser = (newUser) => {
       if (createdUser) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-          message: "Created user success",
-          typeError: "",
+          message: 'Created user success',
+          typeError: '',
           data: createdUser,
-          statusMessage: "Success",
+          statusMessage: 'Success',
         });
       }
     } catch (e) {
@@ -74,10 +74,10 @@ const updateUser = (id, data) => {
       if (!checkUser) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The user is not existed",
+          message: 'The user is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
         return;
       }
@@ -91,10 +91,10 @@ const updateUser = (id, data) => {
         if (existedName !== null) {
           resolve({
             status: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.status,
-            message: "The email of user is existed",
+            message: 'The email of user is existed',
             typeError: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.type,
             data: null,
-            statusMessage: "Error",
+            statusMessage: 'Error',
           });
           return;
         }
@@ -109,7 +109,7 @@ const updateUser = (id, data) => {
           message: "You can't change admin's email or status",
           typeError: CONFIG_MESSAGE_ERRORS.UNAUTHORIZED.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       const dataUser = {
@@ -137,10 +137,10 @@ const updateUser = (id, data) => {
       });
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Updated user success",
-        typeError: "",
+        message: 'Updated user success',
+        typeError: '',
         data: updatedUser,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -153,24 +153,24 @@ const deleteUser = (id) => {
     try {
       const checkUser = await User.findOne({
         _id: id,
-      }).select("-password");
+      }).select('-password');
       if (checkUser === null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The user is not existed",
+          message: 'The user is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
 
       await User.findByIdAndDelete(id);
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Deleted user success",
-        typeError: "",
+        message: 'Deleted user success',
+        typeError: '',
         data: checkUser,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -184,10 +184,10 @@ const deleteManyUser = (ids) => {
       await User.deleteMany({ _id: ids });
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Delete users success",
-        typeError: "",
+        message: 'Delete users success',
+        typeError: '',
         data: null,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -199,16 +199,16 @@ const getAllUser = (params) => {
   return new Promise(async (resolve, reject) => {
     try {
       const limit = params?.limit ? +params?.limit : 10;
-      const search = params?.search ?? "";
-      const page = params?.page ?  +params.page :  1;
-      const order = params?.order ?? "created desc";
+      const search = params?.search ?? '';
+      const page = params?.page ? +params.page : 1;
+      const order = params?.order ?? 'created desc';
       const query = {};
-      const roleId = params?.roleId ?? "";
-      const status = params?.status ?? "";
-      const cityId = params?.cityId ?? "";
+      const roleId = params?.roleId ?? '';
+      const status = params?.status ?? '';
+      const cityId = params?.cityId ?? '';
 
       if (search) {
-        const searchRegex = { $regex: search, $options: "i" };
+        const searchRegex = { $regex: search, $options: 'i' };
 
         query.$or = [
           { email: searchRegex },
@@ -219,26 +219,18 @@ const getAllUser = (params) => {
       }
 
       if (roleId) {
-        const roleIds = roleId
-          ?.split("|")
-          .map((id) => mongoose.Types.ObjectId(id));
+        const roleIds = roleId?.split('|').map((id) => mongoose.Types.ObjectId(id));
         query.role =
-          roleIds.length > 1
-            ? { $in: roleIds }
-            : mongoose.Types.ObjectId(roleId);
+          roleIds.length > 1 ? { $in: roleIds } : mongoose.Types.ObjectId(roleId);
       }
       if (cityId) {
-        const cityIds = cityId
-          ?.split("|")
-          .map((id) => mongoose.Types.ObjectId(id));
+        const cityIds = cityId?.split('|').map((id) => mongoose.Types.ObjectId(id));
         query.city =
-          cityIds.length > 1
-            ? { $in: cityIds }
-            : mongoose.Types.ObjectId(cityId);
+          cityIds.length > 1 ? { $in: cityIds } : mongoose.Types.ObjectId(cityId);
       }
 
       if (status) {
-        const statusId = status?.split("|").map((id) => id);
+        const statusId = status?.split('|').map((id) => id);
         query.status = { $in: statusId };
       }
 
@@ -251,11 +243,9 @@ const getAllUser = (params) => {
       let sortOptions = {};
 
       if (order) {
-        const orderFields = order
-          .split(",")
-          .map((field) => field.trim().split(" "));
+        const orderFields = order.split(',').map((field) => field.trim().split(' '));
         orderFields.forEach(([name, direction]) => {
-          sortOptions[name] = direction.toLowerCase() === "asc" ? 1 : -1;
+          sortOptions[name] = direction.toLowerCase() === 'asc' ? 1 : -1;
         });
       }
 
@@ -276,16 +266,16 @@ const getAllUser = (params) => {
           .sort(sortOptions)
           .select(fieldsToSelect)
           .populate({
-            path: "role",
-            select: "name permissions",
+            path: 'role',
+            select: 'name permissions',
           })
           .lean();
 
         resolve({
           status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-          message: "Success",
-          typeError: "",
-          statusMessage: "Success",
+          message: 'Success',
+          typeError: '',
+          statusMessage: 'Success',
           data: {
             users: allUser,
             totalPage: 1,
@@ -303,21 +293,21 @@ const getAllUser = (params) => {
         .select(fieldsToSelect)
         .populate([
           {
-            path: "role",
-            select: "name permissions",
+            path: 'role',
+            select: 'name permissions',
           },
           {
-            path: "city",
-            select: "name",
+            path: 'city',
+            select: 'name',
           },
         ])
         .lean();
 
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-        message: "Success",
-        typeError: "",
-        statusMessage: "Success",
+        message: 'Success',
+        typeError: '',
+        statusMessage: 'Success',
         data: {
           users: allUser,
           totalPage: totalPage,
@@ -336,29 +326,29 @@ const getDetailsUser = (id) => {
       const user = await User.findOne({
         _id: id,
       })
-        .select("-password")
+        .select('-password')
         .populate({
-          path: "role",
-          select: "name permissions",
+          path: 'role',
+          select: 'name permissions',
         })
         .lean();
 
       if (user === null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The user is not existed",
+          message: 'The user is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
         return;
       }
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-        message: "Success",
-        typeError: "",
+        message: 'Success',
+        typeError: '',
         data: user,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);

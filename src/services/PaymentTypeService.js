@@ -1,5 +1,5 @@
-const { CONFIG_MESSAGE_ERRORS } = require("../configs");
-const PaymentType = require("../models/PaymentType");
+const { CONFIG_MESSAGE_ERRORS } = require('../configs');
+const PaymentType = require('../models/PaymentType');
 
 const createPaymentType = (paymentType) => {
   return new Promise(async (resolve, reject) => {
@@ -11,10 +11,10 @@ const createPaymentType = (paymentType) => {
       if (checkPayment !== null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.status,
-          message: "The name or type of payment type is existed",
+          message: 'The name or type of payment type is existed',
           typeError: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       const createdPayment = await PaymentType.create({
@@ -23,10 +23,10 @@ const createPaymentType = (paymentType) => {
       if (createdPayment) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-          message: "Created payment type success",
-          typeError: "",
+          message: 'Created payment type success',
+          typeError: '',
           data: createdPayment,
-          statusMessage: "Success",
+          statusMessage: 'Success',
         });
       }
     } catch (e) {
@@ -45,10 +45,10 @@ const updatePaymentType = (id, data) => {
       if (!checkPayment) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The payment type name is not existed",
+          message: 'The payment type name is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
         return;
       }
@@ -62,10 +62,10 @@ const updatePaymentType = (id, data) => {
         if (existedName !== null) {
           resolve({
             status: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.status,
-            message: "The payment type name is existed",
+            message: 'The payment type name is existed',
             typeError: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.type,
             data: null,
-            statusMessage: "Error",
+            statusMessage: 'Error',
           });
           return;
         }
@@ -80,10 +80,10 @@ const updatePaymentType = (id, data) => {
         if (existedType !== null) {
           resolve({
             status: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.status,
-            message: "The payment type type is existed",
+            message: 'The payment type type is existed',
             typeError: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.type,
             data: null,
-            statusMessage: "Error",
+            statusMessage: 'Error',
           });
           return;
         }
@@ -94,10 +94,10 @@ const updatePaymentType = (id, data) => {
       });
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Updated payment type success",
-        typeError: "",
+        message: 'Updated payment type success',
+        typeError: '',
         data: updatedPayment,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -114,20 +114,20 @@ const deletePaymentType = (id) => {
       if (checkPayment === null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The payment type is not existed",
+          message: 'The payment type is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
 
       await PaymentType.findByIdAndDelete(id);
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Deleted payment type success",
-        typeError: "",
+        message: 'Deleted payment type success',
+        typeError: '',
         data: checkPayment,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -141,10 +141,10 @@ const deleteManyPaymentType = (ids) => {
       await PaymentType.deleteMany({ _id: ids });
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Delete payment types success",
-        typeError: "",
+        message: 'Delete payment types success',
+        typeError: '',
         data: null,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -161,18 +161,18 @@ const getDetailsPaymentType = (id) => {
       if (checkPayment === null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The payment type is not existed",
+          message: 'The payment type is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-        message: "Success",
-        typeError: "",
+        message: 'Success',
+        typeError: '',
         data: checkPayment,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -184,12 +184,12 @@ const getAllPaymentType = (params) => {
   return new Promise(async (resolve, reject) => {
     try {
       const limit = params?.limit ? +params?.limit : 10;
-      const search = params?.search ?? "";
-      const page = params?.page ?  +params.page :  1;
-      const order = params?.order ?? "created desc";
+      const search = params?.search ?? '';
+      const page = params?.page ? +params.page : 1;
+      const order = params?.order ?? 'created desc';
       const query = {};
       if (search) {
-        const searchRegex = { $regex: search, $options: "i" };
+        const searchRegex = { $regex: search, $options: 'i' };
 
         query.$or = [{ name: searchRegex }];
       }
@@ -202,11 +202,9 @@ const getAllPaymentType = (params) => {
 
       let sortOptions = {};
       if (order) {
-        const orderFields = order
-          .split(",")
-          .map((field) => field.trim().split(" "));
+        const orderFields = order.split(',').map((field) => field.trim().split(' '));
         orderFields.forEach(([name, direction]) => {
-          sortOptions[name] = direction.toLowerCase() === "asc" ? 1 : -1;
+          sortOptions[name] = direction.toLowerCase() === 'asc' ? 1 : -1;
         });
       }
 
@@ -222,9 +220,9 @@ const getAllPaymentType = (params) => {
           .select(fieldsToSelect);
         resolve({
           status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-          message: "Success",
-          typeError: "",
-          statusMessage: "Success",
+          message: 'Success',
+          typeError: '',
+          statusMessage: 'Success',
           data: {
             paymentTypes: allPaymentType,
             totalPage: 1,
@@ -241,9 +239,9 @@ const getAllPaymentType = (params) => {
         .select(fieldsToSelect);
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-        message: "Success",
-        typeError: "",
-        statusMessage: "Success",
+        message: 'Success',
+        typeError: '',
+        statusMessage: 'Success',
         data: {
           paymentTypes: allPaymentType,
           totalPage: totalPage,

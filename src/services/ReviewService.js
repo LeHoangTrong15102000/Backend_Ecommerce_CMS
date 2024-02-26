@@ -1,7 +1,7 @@
-const { CONFIG_MESSAGE_ERRORS } = require("../configs");
-const Review = require("../models/ReviewModel");
-const { buildQuery, preparePaginationAndSorting } = require("../utils");
-const mongoose = require("mongoose");
+const { CONFIG_MESSAGE_ERRORS } = require('../configs');
+const Review = require('../models/ReviewModel');
+const { buildQuery, preparePaginationAndSorting } = require('../utils');
+const mongoose = require('mongoose');
 
 const createReview = (newReview) => {
   return new Promise(async (resolve, reject) => {
@@ -16,10 +16,10 @@ const createReview = (newReview) => {
       if (newReview) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-          message: "Review success",
-          typeError: "",
+          message: 'Review success',
+          typeError: '',
           data: newReview,
-          statusMessage: "Success",
+          statusMessage: 'Success',
         });
       }
     } catch (e) {
@@ -36,10 +36,10 @@ const updateReview = (id, data) => {
       if (checkReview === null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The review is not existed",
+          message: 'The review is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
 
@@ -48,10 +48,10 @@ const updateReview = (id, data) => {
       });
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Updated review success",
-        typeError: "",
+        message: 'Updated review success',
+        typeError: '',
         data: updatedReview,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -68,18 +68,18 @@ const updateReviewMine = (reviewId, userId, data) => {
       if (checkReview === null) {
         reject({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The review is not existed",
+          message: 'The review is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       } else if (userId !== checkReview.user) {
         reject({
           status: CONFIG_MESSAGE_ERRORS.UNAUTHORIZED.status,
-          message: "Unauthorized",
+          message: 'Unauthorized',
           typeError: CONFIG_MESSAGE_ERRORS.UNAUTHORIZED.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
 
@@ -88,10 +88,10 @@ const updateReviewMine = (reviewId, userId, data) => {
       });
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Updated review success",
-        typeError: "",
+        message: 'Updated review success',
+        typeError: '',
         data: updatedReview,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -108,20 +108,20 @@ const deleteReview = (id) => {
       if (checkReview === null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The review is not existed",
+          message: 'The review is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
 
       await Review.findByIdAndDelete(id);
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Deleted review success",
-        typeError: "",
+        message: 'Deleted review success',
+        typeError: '',
         data: checkReview,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -138,28 +138,28 @@ const deleteReviewMine = (reviewId, userId) => {
       if (checkReview === null) {
         reject({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The review is not existed",
+          message: 'The review is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       } else if (userId !== checkReview.user) {
         reject({
           status: CONFIG_MESSAGE_ERRORS.UNAUTHORIZED.status,
-          message: "Unauthorized",
+          message: 'Unauthorized',
           typeError: CONFIG_MESSAGE_ERRORS.UNAUTHORIZED.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
 
       await Review.findByIdAndDelete(id);
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Deleted review success",
-        typeError: "",
+        message: 'Deleted review success',
+        typeError: '',
         data: checkReview,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -173,10 +173,10 @@ const deleteManyReview = (ids) => {
       await Review.deleteMany({ _id: ids });
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Delete reviews success",
-        typeError: "",
+        message: 'Delete reviews success',
+        typeError: '',
         data: null,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -193,18 +193,18 @@ const getDetailsReview = (id) => {
       if (checkReview === null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The review is not existed",
+          message: 'The review is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-        message: "Success",
-        typeError: "",
+        message: 'Success',
+        typeError: '',
         data: checkReview,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -216,34 +216,24 @@ const getAllReview = (params) => {
   return new Promise(async (resolve, reject) => {
     try {
       const limit = params?.limit ?? 10;
-      const search = params?.search ?? "";
+      const search = params?.search ?? '';
       const page = params?.page ?? 1;
-      const order = params?.order ?? "created desc";
-      const userId = params.userId ?? "";
-      const productId = params.productId ?? "";
+      const order = params?.order ?? 'created desc';
+      const userId = params.userId ?? '';
+      const productId = params.productId ?? '';
 
       const query = buildQuery(search);
 
-      const { startIndex, sortOptions } = preparePaginationAndSorting(
-        page,
-        limit,
-        order
-      );
+      const { startIndex, sortOptions } = preparePaginationAndSorting(page, limit, order);
 
       if (userId) {
-        const userIds = userId
-          ?.split("|")
-          .map((id) => mongoose.Types.ObjectId(id));
+        const userIds = userId?.split('|').map((id) => mongoose.Types.ObjectId(id));
         query.type =
-          userIds.length > 1
-            ? { $in: userIds }
-            : mongoose.Types.ObjectId(userId);
+          userIds.length > 1 ? { $in: userIds } : mongoose.Types.ObjectId(userId);
       }
 
       if (productId) {
-        const productIds = productId
-          ?.split("|")
-          .map((id) => mongoose.Types.ObjectId(id));
+        const productIds = productId?.split('|').map((id) => mongoose.Types.ObjectId(id));
         query.type =
           productIds.length > 1
             ? { $in: productIds }
@@ -251,7 +241,7 @@ const getAllReview = (params) => {
       }
 
       if (search) {
-        const searchRegex = { $regex: search, $options: "i" };
+        const searchRegex = { $regex: search, $options: 'i' };
 
         query.$or = [{ email: searchRegex }];
       }
@@ -271,15 +261,15 @@ const getAllReview = (params) => {
           .sort(sortOptions)
           .select(fieldsToSelect)
           .populate({
-            path: "user",
-            select: "avatar firstName lastName middleName",
+            path: 'user',
+            select: 'avatar firstName lastName middleName',
           });
 
         resolve({
           status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-          message: "Success",
-          typeError: "",
-          statusMessage: "Success",
+          message: 'Success',
+          typeError: '',
+          statusMessage: 'Success',
           data: {
             reviews: allReview,
             totalPage: 1,
@@ -295,14 +285,14 @@ const getAllReview = (params) => {
         .sort(sortOptions)
         .select(fieldsToSelect)
         .populate({
-          path: "user",
-          select: "avatar firstName lastName middleName",
+          path: 'user',
+          select: 'avatar firstName lastName middleName',
         });
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-        message: "Success",
-        typeError: "",
-        statusMessage: "Success",
+        message: 'Success',
+        typeError: '',
+        statusMessage: 'Success',
         data: {
           reviews: allReview,
           totalPage: totalPage,

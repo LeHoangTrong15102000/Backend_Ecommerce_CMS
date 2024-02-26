@@ -1,6 +1,6 @@
-const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv");
-const { CONFIG_MESSAGE_ERRORS } = require("../configs");
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+const { CONFIG_MESSAGE_ERRORS } = require('../configs');
 dotenv.config();
 
 const generateToken = async (payload, secretKey, expire) => {
@@ -22,8 +22,8 @@ const refreshTokenJwtService = (token) => {
         if (err) {
           resolve({
             status: CONFIG_MESSAGE_ERRORS.UNAUTHORIZED.status,
-            message: "Unauthorized",
-            statusMessage: "Error",
+            message: 'Unauthorized',
+            statusMessage: 'Error',
             data: null,
             typeError: CONFIG_MESSAGE_ERRORS.UNAUTHORIZED.type,
           });
@@ -38,10 +38,10 @@ const refreshTokenJwtService = (token) => {
         );
         resolve({
           status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-          message: "Success",
-          statusMessage: "Success",
+          message: 'Success',
+          statusMessage: 'Success',
           data: {
-            access_token: access_token
+            access_token: access_token,
           },
           typeError: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.type,
         });

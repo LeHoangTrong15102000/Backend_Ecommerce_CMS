@@ -1,11 +1,11 @@
-const nodemailer = require("nodemailer");
-const dotenv = require("dotenv");
+const nodemailer = require('nodemailer');
+const dotenv = require('dotenv');
 dotenv.config();
-var inlineBase64 = require("nodemailer-plugin-inline-base64");
+var inlineBase64 = require('nodemailer-plugin-inline-base64');
 
 const sendEmailCreateOrder = async (email, orderItems) => {
   let transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
+    host: 'smtp.gmail.com',
     port: 465,
     secure: true, // true for 465, false for other ports
     auth: {
@@ -13,9 +13,9 @@ const sendEmailCreateOrder = async (email, orderItems) => {
       pass: process.env.MAIL_PASSWORD, // generated ethereal password
     },
   });
-  transporter.use("compile", inlineBase64({ cidPrefix: "somePrefix_" }));
+  transporter.use('compile', inlineBase64({ cidPrefix: 'somePrefix_' }));
 
-  let listItem = "";
+  let listItem = '';
   const attachImage = [];
   orderItems.forEach((order) => {
     listItem += `<div>
@@ -30,20 +30,16 @@ const sendEmailCreateOrder = async (email, orderItems) => {
   await transporter.sendMail({
     from: process.env.MAIL_ACCOUNT, // sender address
     to: email, // list of receivers
-    subject: "Bạn đã đặt hàng tại shop LẬP trình thật dễ", // Subject line
-    text: "Hello world?", // plain text body
+    subject: 'Bạn đã đặt hàng tại shop LẬP trình thật dễ', // Subject line
+    text: 'Hello world?', // plain text body
     html: `<div><b>Bạn đã đặt hàng thành công tại shop Lập trình thật dễ</b></div> ${listItem}`,
     attachments: attachImage,
   });
 };
 
-const sendEmailForgotPassword = async (
-  email,
-  resetLink,
-  timeResetTokenExpire
-) => {
+const sendEmailForgotPassword = async (email, resetLink, timeResetTokenExpire) => {
   let transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
+    host: 'smtp.gmail.com',
     port: 465,
     secure: true,
     auth: {
@@ -51,8 +47,7 @@ const sendEmailForgotPassword = async (
       pass: process.env.MAIL_PASSWORD, // generated ethereal password
     },
   });
-  transporter.use("compile", inlineBase64({ cidPrefix: "somePrefix_" }));
-
+  transporter.use('compile', inlineBase64({ cidPrefix: 'somePrefix_' }));
 
   await transporter.sendMail({
     from: process.env.MAIL_ACCOUNT, // sender address

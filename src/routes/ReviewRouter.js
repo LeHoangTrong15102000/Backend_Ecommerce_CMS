@@ -1,43 +1,33 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const ReviewController = require("../controllers/ReviewController");
-const { AuthPermission } = require("../middleware/AuthPermission");
-const { CONFIG_PERMISSIONS } = require("../configs");
+const ReviewController = require('../controllers/ReviewController');
+const { AuthPermission } = require('../middleware/AuthPermission');
+const { CONFIG_PERMISSIONS } = require('../configs');
 
-router.post("/", ReviewController.createReview);
+router.post('/', ReviewController.createReview);
 
 router.put(
-  "/:id",
+  '/:id',
   AuthPermission(CONFIG_PERMISSIONS.MANAGE_ORDER.REVIEW.UPDATE),
   ReviewController.updateReview
 );
 
-router.put(
-  "/me/:id",
-  AuthPermission("", true),
-  ReviewController.updateReviewMine
-);
+router.put('/me/:id', AuthPermission('', true), ReviewController.updateReviewMine);
 
-router.get("/:id", ReviewController.getDetailsReview);
+router.get('/:id', ReviewController.getDetailsReview);
 
-
-
-router.get("/", ReviewController.getAllReview);
+router.get('/', ReviewController.getAllReview);
 
 router.delete(
-  "/delete-many",
+  '/delete-many',
   AuthPermission(CONFIG_PERMISSIONS.MANAGE_ORDER.REVIEW.DELETE),
   ReviewController.deleteMany
 );
 
-router.delete(
-  "/me/:id",
-  AuthPermission("", true),
-  ReviewController.deleteReview
-);
+router.delete('/me/:id', AuthPermission('', true), ReviewController.deleteReview);
 
 router.delete(
-  "/:id",
+  '/:id',
   AuthPermission(CONFIG_PERMISSIONS.MANAGE_ORDER.REVIEW.DELETE),
   ReviewController.deleteReview
 );

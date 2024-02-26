@@ -1,5 +1,5 @@
-const Role = require("../models/RoleModel");
-const { CONFIG_MESSAGE_ERRORS, CONFIG_PERMISSIONS } = require("../configs");
+const Role = require('../models/RoleModel');
+const { CONFIG_MESSAGE_ERRORS, CONFIG_PERMISSIONS } = require('../configs');
 
 const createRole = (newRole) => {
   return new Promise(async (resolve, reject) => {
@@ -11,10 +11,10 @@ const createRole = (newRole) => {
       if (existedRole !== null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.status,
-          message: "The name of role is existed",
+          message: 'The name of role is existed',
           typeError: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
         return;
       }
@@ -24,10 +24,10 @@ const createRole = (newRole) => {
       if (createRole) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-          message: "Created role success",
-          typeError: "",
+          message: 'Created role success',
+          typeError: '',
           data: createRole,
-          statusMessage: "Success",
+          statusMessage: 'Success',
         });
       }
     } catch (e) {
@@ -45,22 +45,22 @@ const updateRole = (id, data) => {
       if (!checkRole) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The role is not existed",
+          message: 'The role is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
         return;
       }
       if (
         checkRole.permissions.includes(CONFIG_PERMISSIONS.ADMIN) ||
         checkRole.permissions.includes(CONFIG_PERMISSIONS.BASIC) ||
-        checkRole.name === "Admin" ||
-        checkRole.name === "Basic"
+        checkRole.name === 'Admin' ||
+        checkRole.name === 'Basic'
       ) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          statusMessage: "Error",
+          statusMessage: 'Error',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           message: `You can't update permission with admin or basic role`,
           data: null,
@@ -77,10 +77,10 @@ const updateRole = (id, data) => {
         if (existedName !== null) {
           resolve({
             status: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.status,
-            message: "The name of role is existed",
+            message: 'The name of role is existed',
             typeError: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.type,
             data: null,
-            statusMessage: "Error",
+            statusMessage: 'Error',
           });
           return;
         }
@@ -89,10 +89,10 @@ const updateRole = (id, data) => {
       const updatedRole = await Role.findByIdAndUpdate(id, data, { new: true });
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Updated role success",
-        typeError: "",
+        message: 'Updated role success',
+        typeError: '',
         data: updatedRole,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -109,20 +109,20 @@ const deleteRole = (id) => {
       if (checkRole === null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The role is not existed",
+          message: 'The role is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
 
       await Role.findByIdAndDelete(id);
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Deleted role success",
-        typeError: "",
+        message: 'Deleted role success',
+        typeError: '',
         data: checkRole,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -136,10 +136,10 @@ const deleteManyRole = (ids) => {
       await Role.deleteMany({ _id: ids });
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Delete roles success",
-        typeError: "",
+        message: 'Delete roles success',
+        typeError: '',
         data: null,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -151,12 +151,12 @@ const getAllRole = (params) => {
   return new Promise(async (resolve, reject) => {
     try {
       const limit = params?.limit ? +params?.limit : 10;
-      const search = params?.search ?? "";
-      const page = params?.page ?  +params.page :  1;
-      const order = params?.order ?? "created desc";
+      const search = params?.search ?? '';
+      const page = params?.page ? +params.page : 1;
+      const order = params?.order ?? 'created desc';
       const query = {};
       if (search) {
-        const searchRegex = { $regex: search, $options: "i" };
+        const searchRegex = { $regex: search, $options: 'i' };
 
         query.$or = [{ name: searchRegex }];
       }
@@ -170,11 +170,9 @@ const getAllRole = (params) => {
       let sortOptions = {};
 
       if (order) {
-        const orderFields = order
-          .split(",")
-          .map((field) => field.trim().split(" "));
+        const orderFields = order.split(',').map((field) => field.trim().split(' '));
         orderFields.forEach(([name, direction]) => {
-          sortOptions[name] = direction.toLowerCase() === "asc" ? 1 : -1;
+          sortOptions[name] = direction.toLowerCase() === 'asc' ? 1 : -1;
         });
       }
 
@@ -183,17 +181,14 @@ const getAllRole = (params) => {
         permissions: 1,
       };
 
-
       if (page === -1 && limit === -1) {
-        const allRole = await Role.find(query)
-          .sort(sortOptions)
-          .select(fieldsToSelect);
+        const allRole = await Role.find(query).sort(sortOptions).select(fieldsToSelect);
 
         resolve({
           status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-          message: "Success",
-          typeError: "",
-          statusMessage: "Success",
+          message: 'Success',
+          typeError: '',
+          statusMessage: 'Success',
           data: {
             roles: allRole,
             totalPage: 1,
@@ -209,9 +204,9 @@ const getAllRole = (params) => {
         .select(fieldsToSelect);
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-        message: "Success",
-        typeError: "",
-        statusMessage: "Success",
+        message: 'Success',
+        typeError: '',
+        statusMessage: 'Success',
         data: {
           roles: allRole,
           totalPage: totalPage,
@@ -233,18 +228,18 @@ const getDetailsRole = (id) => {
       if (role === null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The role is not existed",
+          message: 'The role is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-        message: "Success",
-        typeError: "",
+        message: 'Success',
+        typeError: '',
         data: role,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);

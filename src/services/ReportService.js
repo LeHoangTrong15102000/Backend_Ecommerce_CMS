@@ -1,8 +1,8 @@
-const { CONFIG_MESSAGE_ERRORS } = require("../configs");
-const Product = require("../models/ProductModel");
-const User = require("../models/UserModel");
-const Order = require("../models/OrderProduct");
-const Review = require("../models/ReviewModel");
+const { CONFIG_MESSAGE_ERRORS } = require('../configs');
+const Product = require('../models/ProductModel');
+const User = require('../models/UserModel');
+const Order = require('../models/OrderProduct');
+const Review = require('../models/ReviewModel');
 
 const getReportCountProductType = () => {
   return new Promise(async (resolve, reject) => {
@@ -11,33 +11,33 @@ const getReportCountProductType = () => {
         {
           $group: {
             _id: {
-              type: "$type",
-              status: "$status",
+              type: '$type',
+              status: '$status',
             },
-            typeName: { $first: "$type.name" },
+            typeName: { $first: '$type.name' },
             count: { $sum: 1 },
           },
         },
         {
           $group: {
-            _id: "$_id.type",
+            _id: '$_id.type',
             counts: {
               $push: {
-                k: { $toString: "$_id.status" },
+                k: { $toString: '$_id.status' },
                 v: {
-                  count: "$count",
+                  count: '$count',
                 },
               },
             },
-            total: { $sum: "$count" },
+            total: { $sum: '$count' },
           },
         },
         {
           $project: {
             _id: 0,
-            typeName: "$_id",
+            typeName: '$_id',
             counts: {
-              $arrayToObject: "$counts",
+              $arrayToObject: '$counts',
             },
             total: 1,
           },
@@ -48,9 +48,9 @@ const getReportCountProductType = () => {
 
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-        message: "Success",
-        typeError: "",
-        statusMessage: "Success",
+        message: 'Success',
+        typeError: '',
+        statusMessage: 'Success',
         data: productCountByTypeAndStatus,
       });
     } catch (e) {
@@ -69,9 +69,9 @@ const getReportCountRecords = () => {
 
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-        message: "Success",
-        typeError: "",
-        statusMessage: "Success",
+        message: 'Success',
+        typeError: '',
+        statusMessage: 'Success',
         data: {
           user: userCount,
           product: productCount,
@@ -87,5 +87,5 @@ const getReportCountRecords = () => {
 
 module.exports = {
   getReportCountProductType,
-  getReportCountRecords
+  getReportCountRecords,
 };

@@ -1,5 +1,5 @@
-const { CONFIG_MESSAGE_ERRORS } = require("../configs");
-const City = require("../models/CityModel");
+const { CONFIG_MESSAGE_ERRORS } = require('../configs');
+const City = require('../models/CityModel');
 
 const createCity = (newCity) => {
   return new Promise(async (resolve, reject) => {
@@ -11,10 +11,10 @@ const createCity = (newCity) => {
       if (checkCity !== null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.status,
-          message: "The name of city is existed",
+          message: 'The name of city is existed',
           typeError: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       const createCity = await City.create({
@@ -23,10 +23,10 @@ const createCity = (newCity) => {
       if (createCity) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-          message: "Created city success",
-          typeError: "",
+          message: 'Created city success',
+          typeError: '',
           data: createCity,
-          statusMessage: "Success",
+          statusMessage: 'Success',
         });
       }
     } catch (e) {
@@ -41,14 +41,14 @@ const updateCity = (id, data) => {
       const checkCity = await City.findOne({
         _id: id,
       });
-      
+
       if (!checkCity) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The city is not existed",
+          message: 'The city is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
         return;
       }
@@ -62,25 +62,24 @@ const updateCity = (id, data) => {
         if (existedName !== null) {
           resolve({
             status: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.status,
-            message: "The name of city is existed",
+            message: 'The name of city is existed',
             typeError: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.type,
             data: null,
-            statusMessage: "Error",
+            statusMessage: 'Error',
           });
           return;
         }
       }
-
 
       const updatedCity = await City.findByIdAndUpdate(id, data, {
         new: true,
       });
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Updated city type success",
-        typeError: "",
+        message: 'Updated city type success',
+        typeError: '',
         data: updatedCity,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -97,20 +96,20 @@ const deleteCity = (id) => {
       if (checkCity === null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The city name is not existed",
+          message: 'The city name is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
 
       await City.findByIdAndDelete(id);
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Deleted city success",
-        typeError: "",
+        message: 'Deleted city success',
+        typeError: '',
         data: checkCity,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -120,18 +119,18 @@ const deleteCity = (id) => {
 
 const deleteManyCities = (ids) => {
   return new Promise(async (resolve, reject) => {
-    console.log("check")
+    console.log('check');
     try {
       await City.deleteMany({ _id: ids });
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Delete cities success",
-        typeError: "",
+        message: 'Delete cities success',
+        typeError: '',
         data: null,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
-      console.log("eeeeeeee", {e})
+      console.log('eeeeeeee', { e });
       reject(e);
     }
   });
@@ -146,18 +145,18 @@ const getDetailsCity = (id) => {
       if (checkCity === null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The city is not existed",
+          message: 'The city is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-        message: "Success",
-        typeError: "",
+        message: 'Success',
+        typeError: '',
         data: checkCity,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -169,12 +168,12 @@ const getAllCity = (params) => {
   return new Promise(async (resolve, reject) => {
     try {
       const limit = params?.limit ? +params?.limit : 10;
-      const search = params?.search ?? "";
-      const page = params?.page ?  +params.page :  1;
-      const order = params?.order ?? "created desc";
+      const search = params?.search ?? '';
+      const page = params?.page ? +params.page : 1;
+      const order = params?.order ?? 'created desc';
       const query = {};
       if (search) {
-        const searchRegex = { $regex: search, $options: "i" };
+        const searchRegex = { $regex: search, $options: 'i' };
 
         query.$or = [{ name: searchRegex }];
       }
@@ -187,11 +186,9 @@ const getAllCity = (params) => {
 
       let sortOptions = {};
       if (order) {
-        const orderFields = order
-          .split(",")
-          .map((field) => field.trim().split(" "));
+        const orderFields = order.split(',').map((field) => field.trim().split(' '));
         orderFields.forEach(([name, direction]) => {
-          sortOptions[name] = direction.toLowerCase() === "asc" ? 1 : -1;
+          sortOptions[name] = direction.toLowerCase() === 'asc' ? 1 : -1;
         });
       }
 
@@ -202,14 +199,12 @@ const getAllCity = (params) => {
       };
 
       if (page === -1 && limit === -1) {
-        const allCity = await City.find(query)
-          .sort(sortOptions)
-          .select(fieldsToSelect);
+        const allCity = await City.find(query).sort(sortOptions).select(fieldsToSelect);
         resolve({
           status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-          message: "Success",
-          typeError: "",
-          statusMessage: "Success",
+          message: 'Success',
+          typeError: '',
+          statusMessage: 'Success',
           data: {
             cities: allCity,
             totalPage: 1,
@@ -226,9 +221,9 @@ const getAllCity = (params) => {
         .select(fieldsToSelect);
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-        message: "Success",
-        typeError: "",
-        statusMessage: "Success",
+        message: 'Success',
+        typeError: '',
+        statusMessage: 'Success',
         data: {
           cities: allCity,
           totalPage: totalPage,

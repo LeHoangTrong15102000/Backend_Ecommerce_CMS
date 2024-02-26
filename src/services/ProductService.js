@@ -1,7 +1,7 @@
-const { CONFIG_MESSAGE_ERRORS } = require("../configs");
-const Product = require("../models/ProductModel");
-const User = require("../models/UserModel");
-const mongoose = require("mongoose");
+const { CONFIG_MESSAGE_ERRORS } = require('../configs');
+const Product = require('../models/ProductModel');
+const User = require('../models/UserModel');
+const mongoose = require('mongoose');
 
 const createProduct = (newProduct) => {
   return new Promise(async (resolve, reject) => {
@@ -20,23 +20,19 @@ const createProduct = (newProduct) => {
     } = newProduct;
     try {
       const discountStartDate =
-        newProduct.discountStartDate && discount
-          ? newProduct.discountStartDate
-          : null;
+        newProduct.discountStartDate && discount ? newProduct.discountStartDate : null;
       const discountEndDate =
-        newProduct.discountEndDate && discount
-          ? newProduct.discountEndDate
-          : null;
+        newProduct.discountEndDate && discount ? newProduct.discountEndDate : null;
       const checkProduct = await Product.findOne({
         slug: slug,
       });
       if (checkProduct !== null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.status,
-          message: "The product name is existed",
+          message: 'The product name is existed',
           typeError: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       const dataCreate = {
@@ -60,10 +56,10 @@ const createProduct = (newProduct) => {
       if (createdProduct) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-          message: "Created product success",
-          typeError: "",
+          message: 'Created product success',
+          typeError: '',
           data: createdProduct,
-          statusMessage: "Success",
+          statusMessage: 'Success',
         });
       }
     } catch (e) {
@@ -82,10 +78,10 @@ const updateProduct = (id, data) => {
       if (!checkProduct) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The product is not existed",
+          message: 'The product is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
         return;
       }
@@ -99,10 +95,10 @@ const updateProduct = (id, data) => {
         if (existedName !== null) {
           resolve({
             status: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.status,
-            message: "The slug of product is existed",
+            message: 'The slug of product is existed',
             typeError: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.type,
             data: null,
-            statusMessage: "Error",
+            statusMessage: 'Error',
           });
           return;
         }
@@ -117,10 +113,10 @@ const updateProduct = (id, data) => {
       });
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Updated product success",
-        typeError: "",
+        message: 'Updated product success',
+        typeError: '',
         data: updatedProduct,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -137,20 +133,20 @@ const deleteProduct = (id) => {
       if (checkProduct === null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The product is not existed",
+          message: 'The product is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
 
       await Product.findByIdAndDelete(id);
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Deleted product success",
-        typeError: "",
+        message: 'Deleted product success',
+        typeError: '',
         data: checkProduct,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -164,10 +160,10 @@ const deleteManyProduct = (ids) => {
       await Product.deleteMany({ _id: ids });
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Delete products success",
-        typeError: "",
+        message: 'Delete products success',
+        typeError: '',
         data: null,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -184,18 +180,18 @@ const getDetailsProduct = (id) => {
       if (checkProduct === null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The product is not existed",
+          message: 'The product is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-        message: "Success",
-        typeError: "",
+        message: 'Success',
+        typeError: '',
         data: checkProduct,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -213,10 +209,10 @@ const getDetailsProductPublic = (productId, userId) => {
       if (checkProduct === null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The product is not existed",
+          message: 'The product is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       const user = await User.findById(userId);
@@ -242,10 +238,10 @@ const getDetailsProductPublic = (productId, userId) => {
 
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-        message: "Success",
-        typeError: "",
+        message: 'Success',
+        typeError: '',
         data: checkProduct,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -260,34 +256,34 @@ const getDetailsProductPublicBySlug = (slug, userId) => {
         { $match: { slug: slug, status: 1 } },
         {
           $lookup: {
-            from: "reviews",
-            localField: "_id",
-            foreignField: "product",
-            as: "reviews",
+            from: 'reviews',
+            localField: '_id',
+            foreignField: 'product',
+            as: 'reviews',
           },
         },
         {
           $lookup: {
-            from: "cities",
-            localField: "location",
-            foreignField: "_id",
-            as: "locationInfo",
+            from: 'cities',
+            localField: 'location',
+            foreignField: '_id',
+            as: 'locationInfo',
           },
         },
         {
           $lookup: {
-            from: "producttypes",
-            localField: "type",
-            foreignField: "_id",
-            as: "typeInfo",
+            from: 'producttypes',
+            localField: 'type',
+            foreignField: '_id',
+            as: 'typeInfo',
           },
         },
         {
           $addFields: {
             averageRating: {
-              $ifNull: [{ $avg: "$reviews.star" }, 0],
+              $ifNull: [{ $avg: '$reviews.star' }, 0],
             },
-            totalReviews: { $size: "$reviews" },
+            totalReviews: { $size: '$reviews' },
           },
         },
         {
@@ -303,10 +299,10 @@ const getDetailsProductPublicBySlug = (slug, userId) => {
             sold: 1,
             likedBy: 1,
             location: {
-              $arrayElemAt: ["$locationInfo", 0],
+              $arrayElemAt: ['$locationInfo', 0],
             },
             type: {
-              $arrayElemAt: ["$typeInfo", 0],
+              $arrayElemAt: ['$typeInfo', 0],
             },
             averageRating: 1,
             totalReviews: 1,
@@ -322,17 +318,17 @@ const getDetailsProductPublicBySlug = (slug, userId) => {
       if (checkProduct.length === 0) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The product is not existed",
+          message: 'The product is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       const user = await User.findById(userId);
       const productId = checkProduct[0]._id.toString();
 
       if (user) {
-        console.log("productId", {productId,user: user.viewedProducts })
+        console.log('productId', { productId, user: user.viewedProducts });
         if (productId && !user.viewedProducts.includes(productId)) {
           user.viewedProducts.push(productId);
 
@@ -349,10 +345,10 @@ const getDetailsProductPublicBySlug = (slug, userId) => {
       }
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-        message: "Success",
-        typeError: "",
+        message: 'Success',
+        typeError: '',
         data: checkProduct[0],
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -364,11 +360,11 @@ const getAllProduct = (params) => {
   return new Promise(async (resolve, reject) => {
     try {
       const limit = params?.limit ? +params?.limit : 10;
-      const search = params?.search ?? "";
+      const search = params?.search ?? '';
       const page = params?.page ? +params.page : 1;
-      const order = params?.order ?? "created desc";
-      const productType = params?.productType ?? "";
-      const productLocation = params?.productLocation ?? "";
+      const order = params?.order ?? 'created desc';
+      const productType = params?.productType ?? '';
+      const productLocation = params?.productLocation ?? '';
       const minStar = +params?.minStar || 0;
       const maxStar = +params?.maxStar || 5;
       const minPrice = +params?.minPrice || 0;
@@ -378,7 +374,7 @@ const getAllProduct = (params) => {
 
       if (productType) {
         const productTypeIds = productType
-          ?.split("|")
+          ?.split('|')
           .map((id) => mongoose.Types.ObjectId(id));
         query.type =
           productTypeIds.length > 1
@@ -388,7 +384,7 @@ const getAllProduct = (params) => {
 
       if (productLocation) {
         const productLocationIds = productLocation
-          ?.split("|")
+          ?.split('|')
           .map((id) => mongoose.Types.ObjectId(id));
         query.type =
           productLocationIds.length > 1
@@ -397,15 +393,13 @@ const getAllProduct = (params) => {
       }
 
       if (statusFilter !== undefined) {
-        const statusFilterIds = statusFilter
-          ?.split("|")
-          .map((status) => +status);
+        const statusFilterIds = statusFilter?.split('|').map((status) => +status);
         query.status =
           statusFilterIds.length > 1 ? { $in: statusFilterIds } : +statusFilter;
       }
 
       if (search) {
-        const searchRegex = { $regex: search, $options: "i" };
+        const searchRegex = { $regex: search, $options: 'i' };
 
         query.$or = [{ name: searchRegex }];
       }
@@ -419,11 +413,9 @@ const getAllProduct = (params) => {
 
       let sortOptions = {};
       if (order) {
-        const orderFields = order
-          .split(",")
-          .map((field) => field.trim().split(" "));
+        const orderFields = order.split(',').map((field) => field.trim().split(' '));
         orderFields.forEach(([name, direction]) => {
-          sortOptions[name] = direction.toLowerCase() === "asc" ? 1 : -1;
+          sortOptions[name] = direction.toLowerCase() === 'asc' ? 1 : -1;
         });
       }
 
@@ -438,13 +430,13 @@ const getAllProduct = (params) => {
         type: 1,
         status: 1,
         type: {
-          id: "$typeInfo._id",
-          name: "$typeInfo.name",
+          id: '$typeInfo._id',
+          name: '$typeInfo.name',
         },
         location: 1,
         location: {
-          id: "$locationInfo._id",
-          name: "$locationInfo.name",
+          id: '$locationInfo._id',
+          name: '$locationInfo.name',
         },
       };
 
@@ -453,45 +445,45 @@ const getAllProduct = (params) => {
           { $match: query },
           {
             $lookup: {
-              from: "reviews",
-              localField: "_id",
-              foreignField: "product",
-              as: "reviews",
+              from: 'reviews',
+              localField: '_id',
+              foreignField: 'product',
+              as: 'reviews',
             },
           },
           {
             $addFields: {
               averageRating: {
-                $ifNull: [{ $avg: "$reviews.star" }, 0],
+                $ifNull: [{ $avg: '$reviews.star' }, 0],
               },
             },
           },
           {
             $match: {
-              "reviews.star": { $gte: minStar, $lte: maxStar },
+              'reviews.star': { $gte: minStar, $lte: maxStar },
             },
           },
           {
             $lookup: {
-              from: "producttypes",
-              localField: "type",
-              foreignField: "_id",
-              as: "typeInfo",
+              from: 'producttypes',
+              localField: 'type',
+              foreignField: '_id',
+              as: 'typeInfo',
             },
           },
           {
-            $unwind: "$typeInfo",
+            $unwind: '$typeInfo',
           },
           {
             $lookup: {
-              from: "cities",
-              localField: "location",
-              foreignField: "_id",
-              as: "locationInfo",
+              from: 'cities',
+              localField: 'location',
+              foreignField: '_id',
+              as: 'locationInfo',
             },
           },
           {
-            $unwind: "$locationInfo",
+            $unwind: '$locationInfo',
           },
           {
             $project: fieldsToSelect,
@@ -500,9 +492,9 @@ const getAllProduct = (params) => {
 
         resolve({
           status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-          message: "Success",
-          typeError: "",
-          statusMessage: "Success",
+          message: 'Success',
+          typeError: '',
+          statusMessage: 'Success',
           data: {
             products: allProduct,
             totalPage: 1,
@@ -519,16 +511,16 @@ const getAllProduct = (params) => {
         { $limit: limit },
         {
           $lookup: {
-            from: "reviews",
-            localField: "_id",
-            foreignField: "product",
-            as: "reviews",
+            from: 'reviews',
+            localField: '_id',
+            foreignField: 'product',
+            as: 'reviews',
           },
         },
         {
           $addFields: {
             averageRating: {
-              $ifNull: [{ $avg: { $ifNull: ["$reviews.star", 0] } }, 0],
+              $ifNull: [{ $avg: { $ifNull: ['$reviews.star', 0] } }, 0],
             },
           },
         },
@@ -542,25 +534,25 @@ const getAllProduct = (params) => {
         },
         {
           $lookup: {
-            from: "producttypes",
-            localField: "type",
-            foreignField: "_id",
-            as: "typeInfo",
+            from: 'producttypes',
+            localField: 'type',
+            foreignField: '_id',
+            as: 'typeInfo',
           },
         },
         {
-          $unwind: "$typeInfo",
+          $unwind: '$typeInfo',
         },
         {
           $lookup: {
-            from: "cities",
-            localField: "location",
-            foreignField: "_id",
-            as: "locationInfo",
+            from: 'cities',
+            localField: 'location',
+            foreignField: '_id',
+            as: 'locationInfo',
           },
         },
         {
-          $unwind: "$locationInfo",
+          $unwind: '$locationInfo',
         },
         {
           $project: fieldsToSelect,
@@ -570,9 +562,9 @@ const getAllProduct = (params) => {
 
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-        message: "Success",
-        typeError: "",
-        statusMessage: "Success",
+        message: 'Success',
+        typeError: '',
+        statusMessage: 'Success',
         data: {
           products: allProduct,
           totalPage: totalPage,
@@ -589,11 +581,11 @@ const getAllProductPublic = (params) => {
   return new Promise(async (resolve, reject) => {
     try {
       const limit = params?.limit ? +params?.limit : 10;
-      const search = params?.search ?? "";
+      const search = params?.search ?? '';
       const page = params?.page ? +params.page : 1;
-      const order = params?.order ?? "created desc";
-      const productType = params?.productType ?? "";
-      const productLocation = params?.productLocation ?? "";
+      const order = params?.order ?? 'created desc';
+      const productType = params?.productType ?? '';
+      const productLocation = params?.productLocation ?? '';
 
       const minStar = +params?.minStar || 0;
       const maxStar = +params?.maxStar || 5;
@@ -604,7 +596,7 @@ const getAllProductPublic = (params) => {
 
       if (productType) {
         const productTypeIds = productType
-          ?.split("|")
+          ?.split('|')
           .map((id) => mongoose.Types.ObjectId(id));
         query.type =
           productTypeIds.length > 1
@@ -614,7 +606,7 @@ const getAllProductPublic = (params) => {
 
       if (productLocation) {
         const productLocationIds = productLocation
-          ?.split("|")
+          ?.split('|')
           .map((id) => mongoose.Types.ObjectId(id));
         query.location =
           productLocationIds.length > 1
@@ -623,7 +615,7 @@ const getAllProductPublic = (params) => {
       }
 
       if (search) {
-        const searchRegex = { $regex: search, $options: "i" };
+        const searchRegex = { $regex: search, $options: 'i' };
 
         query.$or = [{ name: searchRegex }];
       }
@@ -637,11 +629,9 @@ const getAllProductPublic = (params) => {
 
       let sortOptions = {};
       if (order) {
-        const orderFields = order
-          .split(",")
-          .map((field) => field.trim().split(" "));
+        const orderFields = order.split(',').map((field) => field.trim().split(' '));
         orderFields.forEach(([name, direction]) => {
-          sortOptions[name] = direction.toLowerCase() === "asc" ? 1 : -1;
+          sortOptions[name] = direction.toLowerCase() === 'asc' ? 1 : -1;
         });
       }
 
@@ -662,13 +652,13 @@ const getAllProductPublic = (params) => {
         discountEndDate: 1,
         type: 1,
         type: {
-          id: "$typeInfo._id",
-          name: "$typeInfo.name",
+          id: '$typeInfo._id',
+          name: '$typeInfo.name',
         },
         location: 1,
         location: {
-          id: "$locationInfo._id",
-          name: "$locationInfo.name",
+          id: '$locationInfo._id',
+          name: '$locationInfo.name',
         },
       };
 
@@ -677,17 +667,17 @@ const getAllProductPublic = (params) => {
           { $match: query },
           {
             $lookup: {
-              from: "reviews",
-              localField: "_id",
-              foreignField: "product",
-              as: "reviews",
+              from: 'reviews',
+              localField: '_id',
+              foreignField: 'product',
+              as: 'reviews',
             },
           },
           {
             $addFields: {
               averageRating: {
-                $ifNull: [{ $avg: { $ifNull: ["$reviews.star", 0] } }, 0],
-                totalReviews: { $size: "$reviews" },
+                $ifNull: [{ $avg: { $ifNull: ['$reviews.star', 0] } }, 0],
+                totalReviews: { $size: '$reviews' },
               },
             },
           },
@@ -701,25 +691,25 @@ const getAllProductPublic = (params) => {
           },
           {
             $lookup: {
-              from: "producttypes",
-              localField: "type",
-              foreignField: "_id",
-              as: "typeInfo",
+              from: 'producttypes',
+              localField: 'type',
+              foreignField: '_id',
+              as: 'typeInfo',
             },
           },
           {
-            $unwind: "$typeInfo",
+            $unwind: '$typeInfo',
           },
           {
             $lookup: {
-              from: "cities",
-              localField: "location",
-              foreignField: "_id",
-              as: "locationInfo",
+              from: 'cities',
+              localField: 'location',
+              foreignField: '_id',
+              as: 'locationInfo',
             },
           },
           {
-            $unwind: "$locationInfo",
+            $unwind: '$locationInfo',
           },
           {
             $project: fieldsToSelect,
@@ -728,9 +718,9 @@ const getAllProductPublic = (params) => {
 
         resolve({
           status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-          message: "Success",
-          typeError: "",
-          statusMessage: "Success",
+          message: 'Success',
+          typeError: '',
+          statusMessage: 'Success',
           data: {
             products: allProduct,
             totalPage: totalPage,
@@ -747,18 +737,18 @@ const getAllProductPublic = (params) => {
         { $limit: limit },
         {
           $lookup: {
-            from: "reviews",
-            localField: "_id",
-            foreignField: "product",
-            as: "reviews",
+            from: 'reviews',
+            localField: '_id',
+            foreignField: 'product',
+            as: 'reviews',
           },
         },
         {
           $addFields: {
             averageRating: {
-              $ifNull: [{ $avg: { $ifNull: ["$reviews.star", 0] } }, 0],
+              $ifNull: [{ $avg: { $ifNull: ['$reviews.star', 0] } }, 0],
             },
-            totalReviews: { $size: "$reviews" },
+            totalReviews: { $size: '$reviews' },
           },
         },
         {
@@ -771,25 +761,25 @@ const getAllProductPublic = (params) => {
         },
         {
           $lookup: {
-            from: "producttypes",
-            localField: "type",
-            foreignField: "_id",
-            as: "typeInfo",
+            from: 'producttypes',
+            localField: 'type',
+            foreignField: '_id',
+            as: 'typeInfo',
           },
         },
         {
-          $unwind: "$typeInfo",
+          $unwind: '$typeInfo',
         },
         {
           $lookup: {
-            from: "cities",
-            localField: "location",
-            foreignField: "_id",
-            as: "locationInfo",
+            from: 'cities',
+            localField: 'location',
+            foreignField: '_id',
+            as: 'locationInfo',
           },
         },
         {
-          $unwind: "$locationInfo",
+          $unwind: '$locationInfo',
         },
         {
           $project: fieldsToSelect,
@@ -799,9 +789,9 @@ const getAllProductPublic = (params) => {
       const allProduct = await Product.aggregate(pipeline);
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-        message: "Success",
-        typeError: "",
-        statusMessage: "Success",
+        message: 'Success',
+        typeError: '',
+        statusMessage: 'Success',
         data: {
           products: allProduct,
           totalPage: totalPage,
@@ -823,30 +813,30 @@ const likeProduct = (productId, userId) => {
       if (existingUser === null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The user is not existed",
+          message: 'The user is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
         return;
       }
       if (existingProduct === null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The product is not existed",
+          message: 'The product is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
         return;
       }
       if (existingUser.likedProducts?.includes(productId)) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The product is liked",
+          message: 'The product is liked',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
         return;
       }
@@ -858,10 +848,10 @@ const likeProduct = (productId, userId) => {
       await existingProduct.save();
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Liked product success",
-        typeError: "",
+        message: 'Liked product success',
+        typeError: '',
         data: null,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -878,20 +868,20 @@ const unlikeProduct = (productId, userId) => {
       if (existingUser === null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The user is not existed",
+          message: 'The user is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
         return;
       }
       if (existingProduct === null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The product is not existed",
+          message: 'The product is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
         return;
       }
@@ -901,7 +891,7 @@ const unlikeProduct = (productId, userId) => {
           message: "The product isn't liked",
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
         return;
       }
@@ -918,10 +908,10 @@ const unlikeProduct = (productId, userId) => {
       await existingUser.save();
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "UnLiked product success",
-        typeError: "",
+        message: 'UnLiked product success',
+        typeError: '',
         data: null,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -943,7 +933,7 @@ const autoUpdateDiscounts = async () => {
       await product.save();
     }
   } catch (error) {
-    console.error("Error updating discounts:", error);
+    console.error('Error updating discounts:', error);
   }
 };
 
@@ -951,7 +941,7 @@ const getAllProductViewed = (userId, params) => {
   return new Promise(async (resolve, reject) => {
     try {
       const limit = params?.limit ? +params?.limit : 10;
-      const search = params?.search ?? "";
+      const search = params?.search ?? '';
       const page = params?.page ? +params.page : 1;
       const query = {};
 
@@ -959,20 +949,20 @@ const getAllProductViewed = (userId, params) => {
       if (!user || !user.viewedProducts) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-          message: "Success",
-          typeError: "",
+          message: 'Success',
+          typeError: '',
           data: {
             products: [],
             totalPage: 0,
             totalCount: 0,
           },
-          statusMessage: "Success",
+          statusMessage: 'Success',
         });
         return;
       }
 
       if (search) {
-        const searchRegex = { $regex: search, $options: "i" };
+        const searchRegex = { $regex: search, $options: 'i' };
 
         query.$or = [{ name: searchRegex }];
       }
@@ -990,14 +980,14 @@ const getAllProductViewed = (userId, params) => {
 
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-        message: "Success",
-        typeError: "",
+        message: 'Success',
+        typeError: '',
         data: {
           products: viewedProducts,
           totalPage: totalPage,
           totalCount: total,
         },
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -1009,7 +999,7 @@ const getAllProductLiked = (userId, params) => {
   return new Promise(async (resolve, reject) => {
     try {
       const limit = params?.limit ? +params?.limit : 10;
-      const search = params?.search ?? "";
+      const search = params?.search ?? '';
       const page = params?.page ? +params.page : 1;
       const user = await User.findById(userId);
       const query = {};
@@ -1017,20 +1007,20 @@ const getAllProductLiked = (userId, params) => {
       if (!user || !user.likedProducts) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-          message: "Success",
-          typeError: "",
+          message: 'Success',
+          typeError: '',
           data: {
             products: [],
             totalPage: 0,
             totalCount: 0,
           },
-          statusMessage: "Success",
+          statusMessage: 'Success',
         });
         return;
       }
 
       if (search) {
-        const searchRegex = { $regex: search, $options: "i" };
+        const searchRegex = { $regex: search, $options: 'i' };
 
         query.$or = [{ name: searchRegex }];
       }
@@ -1048,14 +1038,14 @@ const getAllProductLiked = (userId, params) => {
 
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Success",
-        typeError: "",
+        message: 'Success',
+        typeError: '',
         data: {
           products: likedProducts,
           totalPage: totalPage,
           totalCount: total,
         },
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -1067,9 +1057,9 @@ const getListRelatedProductBySlug = (params) => {
   return new Promise(async (resolve, reject) => {
     try {
       const limit = params?.limit ? +params?.limit : 10;
-      const search = params?.search ?? "";
+      const search = params?.search ?? '';
       const page = params?.page ? +params?.page : 1;
-      const order = params?.order ?? "created desc";
+      const order = params?.order ?? 'created desc';
       const slug = params.slug;
       const query = {};
       query.status = 1;
@@ -1079,10 +1069,10 @@ const getListRelatedProductBySlug = (params) => {
       if (checkProduct === null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The product is not existed",
+          message: 'The product is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       query.slug = { $ne: slug };
@@ -1091,7 +1081,7 @@ const getListRelatedProductBySlug = (params) => {
       }
 
       if (search) {
-        const searchRegex = { $regex: search, $options: "i" };
+        const searchRegex = { $regex: search, $options: 'i' };
 
         query.$or = [{ name: searchRegex }];
       }
@@ -1100,7 +1090,7 @@ const getListRelatedProductBySlug = (params) => {
       const totalPage = Math.ceil(totalCount / limit);
 
       const startIndex = (page - 1) * limit;
-      console.log("totalCount", {
+      console.log('totalCount', {
         totalCount,
         totalPage,
         limit,
@@ -1110,11 +1100,9 @@ const getListRelatedProductBySlug = (params) => {
 
       let sortOptions = {};
       if (order) {
-        const orderFields = order
-          .split(",")
-          .map((field) => field.trim().split(" "));
+        const orderFields = order.split(',').map((field) => field.trim().split(' '));
         orderFields.forEach(([name, direction]) => {
-          sortOptions[name] = direction.toLowerCase() === "asc" ? 1 : -1;
+          sortOptions[name] = direction.toLowerCase() === 'asc' ? 1 : -1;
         });
       }
 
@@ -1134,8 +1122,8 @@ const getListRelatedProductBySlug = (params) => {
         discountEndDate: 1,
         type: 1,
         type: {
-          id: "$typeInfo._id",
-          name: "$typeInfo.name",
+          id: '$typeInfo._id',
+          name: '$typeInfo.name',
         },
       };
 
@@ -1144,30 +1132,30 @@ const getListRelatedProductBySlug = (params) => {
           { $match: query },
           {
             $lookup: {
-              from: "reviews",
-              localField: "_id",
-              foreignField: "product",
-              as: "reviews",
+              from: 'reviews',
+              localField: '_id',
+              foreignField: 'product',
+              as: 'reviews',
             },
           },
           {
             $addFields: {
               averageRating: {
-                $ifNull: [{ $avg: { $ifNull: ["$reviews.star", 0] } }, 0],
-                totalReviews: { $size: "$reviews" },
+                $ifNull: [{ $avg: { $ifNull: ['$reviews.star', 0] } }, 0],
+                totalReviews: { $size: '$reviews' },
               },
             },
           },
           {
             $lookup: {
-              from: "producttypes",
-              localField: "type",
-              foreignField: "_id",
-              as: "typeInfo",
+              from: 'producttypes',
+              localField: 'type',
+              foreignField: '_id',
+              as: 'typeInfo',
             },
           },
           {
-            $unwind: "$typeInfo",
+            $unwind: '$typeInfo',
           },
           {
             $project: fieldsToSelect,
@@ -1176,9 +1164,9 @@ const getListRelatedProductBySlug = (params) => {
 
         resolve({
           status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-          message: "Success",
-          typeError: "",
-          statusMessage: "Success",
+          message: 'Success',
+          typeError: '',
+          statusMessage: 'Success',
           data: {
             products: allProduct,
             totalPage: totalPage,
@@ -1187,7 +1175,7 @@ const getListRelatedProductBySlug = (params) => {
         });
         return;
       }
-      console.log("query", { query, sortOptions, startIndex, limit });
+      console.log('query', { query, sortOptions, startIndex, limit });
       const pipeline = [
         { $match: query },
         { $sort: sortOptions },
@@ -1195,30 +1183,30 @@ const getListRelatedProductBySlug = (params) => {
         { $limit: limit },
         {
           $lookup: {
-            from: "reviews",
-            localField: "_id",
-            foreignField: "product",
-            as: "reviews",
+            from: 'reviews',
+            localField: '_id',
+            foreignField: 'product',
+            as: 'reviews',
           },
         },
         {
           $addFields: {
             averageRating: {
-              $ifNull: [{ $avg: { $ifNull: ["$reviews.star", 0] } }, 0],
+              $ifNull: [{ $avg: { $ifNull: ['$reviews.star', 0] } }, 0],
             },
-            totalReviews: { $size: "$reviews" },
+            totalReviews: { $size: '$reviews' },
           },
         },
         {
           $lookup: {
-            from: "producttypes",
-            localField: "type",
-            foreignField: "_id",
-            as: "typeInfo",
+            from: 'producttypes',
+            localField: 'type',
+            foreignField: '_id',
+            as: 'typeInfo',
           },
         },
         {
-          $unwind: "$typeInfo",
+          $unwind: '$typeInfo',
         },
         {
           $project: fieldsToSelect,
@@ -1228,9 +1216,9 @@ const getListRelatedProductBySlug = (params) => {
       const allProduct = await Product.aggregate(pipeline);
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-        message: "Success",
-        typeError: "",
-        statusMessage: "Success",
+        message: 'Success',
+        typeError: '',
+        statusMessage: 'Success',
         data: {
           products: allProduct,
           totalPage: totalPage,

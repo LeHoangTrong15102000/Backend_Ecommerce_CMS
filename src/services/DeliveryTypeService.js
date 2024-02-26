@@ -1,9 +1,9 @@
-const { CONFIG_MESSAGE_ERRORS } = require("../configs");
-const DeliveryType = require("../models/DeliveryType");
+const { CONFIG_MESSAGE_ERRORS } = require('../configs');
+const DeliveryType = require('../models/DeliveryType');
 
 const createDeliveryType = (newType) => {
   return new Promise(async (resolve, reject) => {
-    const { name,price } = newType;
+    const { name, price } = newType;
     try {
       const checkDelivery = await DeliveryType.findOne({
         name: name,
@@ -11,23 +11,23 @@ const createDeliveryType = (newType) => {
       if (checkDelivery !== null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.status,
-          message: "The name of delivery type is existed",
+          message: 'The name of delivery type is existed',
           typeError: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       const createdDeliveryType = await DeliveryType.create({
         name,
-        price
+        price,
       });
       if (createdDeliveryType) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-          message: "Created delivery type success",
-          typeError: "",
+          message: 'Created delivery type success',
+          typeError: '',
           data: createdDeliveryType,
-          statusMessage: "Success",
+          statusMessage: 'Success',
         });
       }
     } catch (e) {
@@ -45,10 +45,10 @@ const updateDeliveryType = (id, data) => {
       if (!checkDelivery) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The type of delivery is not existed",
+          message: 'The type of delivery is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
         return;
       }
@@ -62,10 +62,10 @@ const updateDeliveryType = (id, data) => {
         if (existedName !== null) {
           resolve({
             status: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.status,
-            message: "The name of delivery type is existed",
+            message: 'The name of delivery type is existed',
             typeError: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.type,
             data: null,
-            statusMessage: "Error",
+            statusMessage: 'Error',
           });
           return;
         }
@@ -76,10 +76,10 @@ const updateDeliveryType = (id, data) => {
       });
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Updated delivery type success",
-        typeError: "",
+        message: 'Updated delivery type success',
+        typeError: '',
         data: updatedDelivery,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -96,20 +96,20 @@ const deleteDeliveryType = (id) => {
       if (checkDelivery === null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The delivery type is not existed",
+          message: 'The delivery type is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
 
       await DeliveryType.findByIdAndDelete(id);
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Deleted delivery type success",
-        typeError: "",
+        message: 'Deleted delivery type success',
+        typeError: '',
         data: checkDelivery,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -123,10 +123,10 @@ const deleteManyDeliveryType = (ids) => {
       await DeliveryType.deleteMany({ _id: ids });
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Delete delivery type success",
-        typeError: "",
+        message: 'Delete delivery type success',
+        typeError: '',
         data: null,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -143,18 +143,18 @@ const getDetailsDeliveryType = (id) => {
       if (checkDelivery === null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The delivery type is not existed",
+          message: 'The delivery type is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-        message: "Success",
-        typeError: "",
+        message: 'Success',
+        typeError: '',
         data: checkDelivery,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -166,12 +166,12 @@ const getAllDeliveryType = (params) => {
   return new Promise(async (resolve, reject) => {
     try {
       const limit = params?.limit ? +params?.limit : 10;
-      const search = params?.search ?? "";
-      const page = params?.page ?  +params.page :  1;
-      const order = params?.order ?? "created desc";
+      const search = params?.search ?? '';
+      const page = params?.page ? +params.page : 1;
+      const order = params?.order ?? 'created desc';
       const query = {};
       if (search) {
-        const searchRegex = { $regex: search, $options: "i" };
+        const searchRegex = { $regex: search, $options: 'i' };
 
         query.$or = [{ name: searchRegex }];
       }
@@ -184,11 +184,9 @@ const getAllDeliveryType = (params) => {
 
       let sortOptions = {};
       if (order) {
-        const orderFields = order
-          .split(",")
-          .map((field) => field.trim().split(" "));
+        const orderFields = order.split(',').map((field) => field.trim().split(' '));
         orderFields.forEach(([name, direction]) => {
-          sortOptions[name] = direction.toLowerCase() === "asc" ? 1 : -1;
+          sortOptions[name] = direction.toLowerCase() === 'asc' ? 1 : -1;
         });
       }
 
@@ -204,9 +202,9 @@ const getAllDeliveryType = (params) => {
           .select(fieldsToSelect);
         resolve({
           status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-          message: "Success",
-          typeError: "",
-          statusMessage: "Success",
+          message: 'Success',
+          typeError: '',
+          statusMessage: 'Success',
           data: {
             deliveryTypes: allDelivery,
             totalPage: 1,
@@ -224,9 +222,9 @@ const getAllDeliveryType = (params) => {
 
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-        message: "Success",
-        typeError: "",
-        statusMessage: "Success",
+        message: 'Success',
+        typeError: '',
+        statusMessage: 'Success',
         data: {
           deliveryTypes: allDelivery,
           totalPage: totalPage,

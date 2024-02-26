@@ -1,9 +1,9 @@
-const { CONFIG_MESSAGE_ERRORS } = require("../configs");
-const Order = require("../models/OrderProduct");
-const Product = require("../models/ProductModel");
-const EmailService = require("../services/EmailService");
-const { preparePaginationAndSorting, buildQuery } = require("../utils");
-const mongoose = require("mongoose");
+const { CONFIG_MESSAGE_ERRORS } = require('../configs');
+const Order = require('../models/OrderProduct');
+const Product = require('../models/ProductModel');
+const EmailService = require('../services/EmailService');
+const { preparePaginationAndSorting, buildQuery } = require('../utils');
+const mongoose = require('mongoose');
 
 const updateProductStock = async (order) => {
   try {
@@ -16,26 +16,26 @@ const updateProductStock = async (order) => {
     if (productData) {
       return {
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Success",
-        typeError: "",
+        message: 'Success',
+        typeError: '',
         data: productData,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       };
     } else {
       return {
         status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-        message: "Error",
-        typeError: "",
-        statusMessage: "Error",
+        message: 'Error',
+        typeError: '',
+        statusMessage: 'Error',
         id: order.product,
       };
     }
   } catch (error) {
     return {
       status: CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status,
-      message: "Error",
-      typeError: "",
-      statusMessage: "Error",
+      message: 'Error',
+      typeError: '',
+      statusMessage: 'Error',
       id: order.product,
     };
   }
@@ -57,7 +57,7 @@ const createOrder = (newOrder) => {
       isPaid,
       paidAt,
       email,
-      deliveryMethod
+      deliveryMethod,
     } = newOrder;
     try {
       const promises = newOrder.orderItems.map(updateProductStock);
@@ -69,10 +69,10 @@ const createOrder = (newOrder) => {
           arrId.push(item.id);
         });
         resolve({
-          message: `The product with id: ${arrId.join(",")} out of the stock`,
+          message: `The product with id: ${arrId.join(',')} out of the stock`,
           status: CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status,
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
-          statusMessage: "Error",
+          statusMessage: 'Error',
           data: null,
         });
       } else {
@@ -102,10 +102,10 @@ const createOrder = (newOrder) => {
         if (createdOrder) {
           resolve({
             status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-            message: "Success",
-            typeError: "",
+            message: 'Success',
+            typeError: '',
             data: createdOrder,
-            statusMessage: "Success",
+            statusMessage: 'Success',
           });
         }
         // await EmailService.sendEmailCreateOrder(email, orderItems);
@@ -126,18 +126,18 @@ const getOrderDetails = (id) => {
       if (checkOrder === null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The product is not existed",
+          message: 'The product is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-        message: "Success",
-        typeError: "",
+        message: 'Success',
+        typeError: '',
         data: checkOrder,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -152,18 +152,18 @@ const deleteOrderProduct = (id) => {
       if (!checkOrder) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The product is not existed",
+          message: 'The product is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
 
       const deletedOrder = await Order.findByIdAndDelete(id);
       if (!deletedOrder) {
         return resolve({
-          status: "ERR",
-          message: "Failed to delete order",
+          status: 'ERR',
+          message: 'Failed to delete order',
         });
       }
 
@@ -182,10 +182,10 @@ const deleteOrderProduct = (id) => {
       );
 
       resolve({
-        message: "Order deleted successfully",
+        message: 'Order deleted successfully',
         status: CONFIG_MESSAGE_ERRORS.AC.status,
-        typeError: "",
-        statusMessage: "Success",
+        typeError: '',
+        statusMessage: 'Success',
         data: deletedOrder,
       });
     } catch (e) {
@@ -205,7 +205,7 @@ const updateOrder = (id, data) => {
           message: `Order with ID ${id} not found`,
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
         return;
       }
@@ -213,13 +213,10 @@ const updateOrder = (id, data) => {
       existingOrder.orderItems = data.orderItems || existingOrder.orderItems;
       existingOrder.shippingAddress =
         data.shippingAddress || existingOrder.shippingAddress;
-      existingOrder.paymentMethod =
-        data.paymentMethod || existingOrder.paymentMethod;
-      existingOrder.deliveryMethod =
-        data.deliveryMethod || existingOrder.deliveryMethod;
+      existingOrder.paymentMethod = data.paymentMethod || existingOrder.paymentMethod;
+      existingOrder.deliveryMethod = data.deliveryMethod || existingOrder.deliveryMethod;
       existingOrder.itemsPrice = data.itemsPrice || existingOrder.itemsPrice;
-      existingOrder.shippingPrice =
-        data.shippingPrice || existingOrder.shippingPrice;
+      existingOrder.shippingPrice = data.shippingPrice || existingOrder.shippingPrice;
       existingOrder.totalPrice = data.totalPrice || existingOrder.totalPrice;
       existingOrder.isPaid = data.isPaid || existingOrder.isPaid;
       existingOrder.paidAt = data.paidAt || existingOrder.paidAt;
@@ -229,10 +226,10 @@ const updateOrder = (id, data) => {
 
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Order updated successfully",
-        typeError: "",
+        message: 'Order updated successfully',
+        typeError: '',
         data: savedOrder,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (error) {
       reject(error);
@@ -247,10 +244,10 @@ const cancelOrder = (orderId) => {
       if (!order) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The Order is not existed",
+          message: 'The Order is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
         return;
       }
@@ -258,10 +255,10 @@ const cancelOrder = (orderId) => {
       if (order.isPaid === 1) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "Cannot cancel order that has been paid",
+          message: 'Cannot cancel order that has been paid',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
         return;
       }
@@ -270,10 +267,10 @@ const cancelOrder = (orderId) => {
       await order.save();
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Order cancelled successfully",
-        typeError: "",
+        message: 'Order cancelled successfully',
+        typeError: '',
         data: order,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (error) {
       reject(error);
@@ -285,53 +282,39 @@ const getAllOrder = (params) => {
   return new Promise(async (resolve, reject) => {
     try {
       const limit = params?.limit ? +params?.limit : 10;
-      const search = params?.search ?? "";
-      const page = params?.page ?  +params.page :  1;
-      const order = params?.order ?? "created desc";
-      const userId = params.userId ?? "";
-      const productId = params.productId ?? "";
-      const status = params.status ?? "";
-      const cityId = params.cityId ?? "";
+      const search = params?.search ?? '';
+      const page = params?.page ? +params.page : 1;
+      const order = params?.order ?? 'created desc';
+      const userId = params.userId ?? '';
+      const productId = params.productId ?? '';
+      const status = params.status ?? '';
+      const cityId = params.cityId ?? '';
 
       const query = buildQuery(search);
 
-      const { startIndex, sortOptions } = preparePaginationAndSorting(
-        page,
-        limit,
-        order
-      );
+      const { startIndex, sortOptions } = preparePaginationAndSorting(page, limit, order);
 
       if (userId) {
-        const userIds = userId
-          ?.split("|")
-          .map((id) => mongoose.Types.ObjectId(id));
+        const userIds = userId?.split('|').map((id) => mongoose.Types.ObjectId(id));
         query.type =
-          userIds.length > 1
-            ? { $in: userIds }
-            : mongoose.Types.ObjectId(userId);
+          userIds.length > 1 ? { $in: userIds } : mongoose.Types.ObjectId(userId);
       }
 
       if (productId) {
-        const productIds = productId
-          ?.split("|")
-          .map((id) => mongoose.Types.ObjectId(id));
+        const productIds = productId?.split('|').map((id) => mongoose.Types.ObjectId(id));
         query.type =
           productIds.length > 1
             ? { $in: productIds }
             : mongoose.Types.ObjectId(productId);
       }
       if (cityId) {
-        const cityIds = cityId
-          ?.split("|")
-          .map((id) => mongoose.Types.ObjectId(id));
+        const cityIds = cityId?.split('|').map((id) => mongoose.Types.ObjectId(id));
         query.type =
-          cityIds.length > 1
-            ? { $in: cityIds }
-            : mongoose.Types.ObjectId(cityId);
+          cityIds.length > 1 ? { $in: cityIds } : mongoose.Types.ObjectId(cityId);
       }
 
       if (status) {
-        const status = status?.split("|").map((id) => id);
+        const status = status?.split('|').map((id) => id);
         query.type = { $in: status };
       }
 
@@ -347,14 +330,12 @@ const getAllOrder = (params) => {
       };
 
       if (page === -1 && limit === -1) {
-        const allOrder = await Order.find(query)
-          .sort(sortOptions)
-          .select(fieldsToSelect);
+        const allOrder = await Order.find(query).sort(sortOptions).select(fieldsToSelect);
         resolve({
           status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-          message: "Success",
-          typeError: "",
-          statusMessage: "Success",
+          message: 'Success',
+          typeError: '',
+          statusMessage: 'Success',
           data: {
             orders: allOrder,
             totalPage: 1,
@@ -371,9 +352,9 @@ const getAllOrder = (params) => {
         .select(fieldsToSelect);
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-        message: "Success",
-        typeError: "",
-        statusMessage: "Success",
+        message: 'Success',
+        typeError: '',
+        statusMessage: 'Success',
         data: {
           orders: allOrder,
           totalPage: totalPage,
@@ -391,18 +372,14 @@ const getAllOrderOfMe = (userId, params) => {
   return new Promise(async (resolve, reject) => {
     try {
       const limit = params?.limit ?? 10;
-      const search = params?.search ?? "";
+      const search = params?.search ?? '';
       const page = params?.page ?? 1;
-      const order = params?.order ?? "created desc";
-      const product = params.product ?? "";
-      const status = params.status ?? "";
+      const order = params?.order ?? 'created desc';
+      const product = params.product ?? '';
+      const status = params.status ?? '';
       const query = buildQuery(search);
       query.user = mongoose.Types.ObjectId(userId);
-      const { startIndex, sortOptions } = preparePaginationAndSorting(
-        page,
-        limit,
-        order
-      );
+      const { startIndex, sortOptions } = preparePaginationAndSorting(page, limit, order);
 
       if (product) {
         if (Array.isArray(product)) {
@@ -431,18 +408,18 @@ const getAllOrderOfMe = (userId, params) => {
         updatedAt: 1,
         user: 1,
       };
-      console.log("query", {query})
+      console.log('query', { query });
       const allOrder = await Order.find(query)
         .skip(startIndex)
         .limit(limit)
         .sort(sortOptions)
         .select(fieldsToSelect);
-        
+
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-        message: "Success",
-        typeError: "",
-        statusMessage: "Success",
+        message: 'Success',
+        typeError: '',
+        statusMessage: 'Success',
         data: {
           orders: allOrder,
           totalPage: totalPage,
@@ -465,29 +442,29 @@ const getDetailsOrderOfMe = (userId, orderId) => {
         if (checkOrder === null) {
           resolve({
             status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-            message: "The product is not existed",
+            message: 'The product is not existed',
             typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
             data: null,
-            statusMessage: "Error",
+            statusMessage: 'Error',
           });
           return;
         }
         if (checkOrder.user !== userId) {
           resolve({
             status: CONFIG_MESSAGE_ERRORS.UNAUTHORIZED.status,
-            message: "You no has permission",
+            message: 'You no has permission',
             typeError: CONFIG_MESSAGE_ERRORS.UNAUTHORIZED.type,
             data: null,
-            statusMessage: "Error",
+            statusMessage: 'Error',
           });
           return;
         }
         resolve({
           status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
-          message: "Success",
-          typeError: "",
+          message: 'Success',
+          typeError: '',
           data: checkOrder,
-          statusMessage: "Success",
+          statusMessage: 'Success',
         });
       } catch (e) {
         reject(e);
@@ -505,10 +482,10 @@ const cancelOrderOfMe = (userId, orderId) => {
       if (!order) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The Order is not existed",
+          message: 'The Order is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
         return;
       }
@@ -516,10 +493,10 @@ const cancelOrderOfMe = (userId, orderId) => {
       if (checkOrder.user !== userId) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.UNAUTHORIZED.status,
-          message: "You no has permission",
+          message: 'You no has permission',
           typeError: CONFIG_MESSAGE_ERRORS.UNAUTHORIZED.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
         return;
       }
@@ -527,10 +504,10 @@ const cancelOrderOfMe = (userId, orderId) => {
       if (order.isPaid === 1) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "Cannot cancel order that has been paid",
+          message: 'Cannot cancel order that has been paid',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
         return;
       }
@@ -539,10 +516,10 @@ const cancelOrderOfMe = (userId, orderId) => {
       await order.save();
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Order cancelled successfully",
-        typeError: "",
+        message: 'Order cancelled successfully',
+        typeError: '',
         data: order,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (error) {
       reject(error);
