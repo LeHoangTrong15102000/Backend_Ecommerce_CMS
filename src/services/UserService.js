@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const { CONFIG_MESSAGE_ERRORS, CONFIG_USER_TYPE } = require('../configs');
 const { isAdminPermission } = require('../utils');
 const mongoose = require('mongoose');
+const Role = require('../models/RoleModel');
 
 const createUser = (newUser) => {
   return new Promise(async (resolve, reject) => {

@@ -19,6 +19,9 @@ const registerUser = (newUser) => {
       const existedUser = await User.findOne({
         email: email,
       });
+      const basicRole = await Role.findOne({
+        name: 'Basic',
+      });
       if (existedUser !== null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.status,
@@ -33,6 +36,7 @@ const registerUser = (newUser) => {
         email,
         password: hash,
         status: 1,
+        role: basicRole._id,
       });
       if (createdUser) {
         resolve({
