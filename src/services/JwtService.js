@@ -31,6 +31,7 @@ const refreshTokenJwtService = (token) => {
         const access_token = await generateToken(
           {
             id: user?.id,
+            // lúc mà mã hoá nó ra chỉ có user.permission mà thôi không có user.role.permission
             permissions: user?.permissions,
           },
           process.env.ACCESS_TOKEN_SECRET,
