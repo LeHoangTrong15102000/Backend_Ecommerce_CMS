@@ -69,6 +69,7 @@ const updateRole = (id, data) => {
       }
 
       if (data.name && data.name !== checkRole.name) {
+        // Nếu mà cái data.name đã tồn tại trong db rồi thì thông báo lỗi
         const existedName = await Role.findOne({
           name: data.name,
           _id: { $ne: id },
@@ -86,6 +87,7 @@ const updateRole = (id, data) => {
         }
       }
 
+      // Còn không sẽ cho phép update cái role đó
       const updatedRole = await Role.findByIdAndUpdate(id, data, { new: true });
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
