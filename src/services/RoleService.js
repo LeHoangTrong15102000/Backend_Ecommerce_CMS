@@ -42,6 +42,7 @@ const updateRole = (id, data) => {
       const checkRole = await Role.findOne({
         _id: id,
       });
+      // Nếu không có cái role đó trong database thì show ra lỗi là `The role is not exitsted`
       if (!checkRole) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
@@ -70,11 +71,13 @@ const updateRole = (id, data) => {
 
       if (data.name && data.name !== checkRole.name) {
         // Nếu mà cái data.name đã tồn tại trong db rồi thì thông báo lỗi
+        // Sẽ tìm kiếm trong database xem đã có thằng `data.name` hay chưa
         const existedName = await Role.findOne({
           name: data.name,
           _id: { $ne: id },
         });
 
+        // Nếu đã tồn tại existedName ở trong database thì hiển thị lên lỗi
         if (existedName !== null) {
           resolve({
             status: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.status,
