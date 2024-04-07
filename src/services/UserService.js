@@ -38,6 +38,7 @@ const createUser = (newUser) => {
         password: hash,
         phoneNumber: phoneNumber,
         address,
+        // Thằng city thì chúng ta sẽ không đưa vào khi mà chúng ta tạo user
         firstName,
         lastName,
         middleName,
