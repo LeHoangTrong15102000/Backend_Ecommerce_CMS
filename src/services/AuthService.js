@@ -196,6 +196,7 @@ const updateAuthMe = (id, data, isPermission) => {
         }
       }
 
+      // Này chính là thằng chúng ta trả về khi mà cập nhật thành công nên là sẽ thêm các thuộc tính của thằng role vào
       const updatedUser = await User.findByIdAndUpdate(id, data, { new: true })
         .select('-password')
         .populate({

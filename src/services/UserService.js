@@ -67,6 +67,7 @@ const createUser = (newUser) => {
   });
 };
 
+// data là những giá trị mà người dùng gửi lên để cập nhật lại thông tin của user
 const updateUser = (id, data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -116,14 +117,14 @@ const updateUser = (id, data) => {
       }
       const dataUser = {
         email: data.email,
-        password: checkUser.password,
+        password: checkUser.password, //  Lấy password từ thầng checkUser(không show password lên phía client cho người dùng thấy)
         phoneNumber: data.phoneNumber,
         address: data.address,
         firstName: data.firstName,
         lastName: data.lastName,
         middleName: data.middleName,
-        city: checkUser.city,
-        role: checkUser.role,
+        city: checkUser.city, // Giữ mà không truyền lên thì phải giữ lại cái thằng city của nó
+        role: checkUser.role, //  Giữ lại thằng role của nó
         middleName: data.middleName,
         avatar: data.avatar,
         status: data.status,
