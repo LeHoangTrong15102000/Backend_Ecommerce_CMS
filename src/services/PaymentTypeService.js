@@ -3,11 +3,12 @@ const PaymentType = require('../models/PaymentType');
 
 const createPaymentType = (paymentType) => {
   return new Promise(async (resolve, reject) => {
-    const { name } = paymentType;
+    const { name, type } = paymentType;
     try {
       const checkPayment = await PaymentType.findOne({
         $or: [{ name: name }, { type: type }],
       });
+      // console.log('Checkkk checkk Payment', checkPayment);
       if (checkPayment !== null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.status,
@@ -19,6 +20,7 @@ const createPaymentType = (paymentType) => {
       }
       const createdPayment = await PaymentType.create({
         name,
+        type,
       });
       if (createdPayment) {
         resolve({
