@@ -52,6 +52,7 @@ const createProduct = (newProduct) => {
       if (location) {
         dataCreate.location = location;
       }
+      // Nếu location có thì đưa vào còn không thì thôi
       const createdProduct = await Product.create(dataCreate);
       if (createdProduct) {
         resolve({
@@ -543,22 +544,24 @@ const getAllProduct = (params) => {
         {
           $unwind: '$typeInfo',
         },
-        {
-          $lookup: {
-            from: 'cities',
-            localField: 'location',
-            foreignField: '_id',
-            as: 'locationInfo',
-          },
-        },
-        {
-          $unwind: '$locationInfo',
-        },
+        // {
+        //   $lookup: {
+        //     from: 'cities',
+        //     localField: 'location',
+        //     foreignField: '_id',
+        //     as: 'locationInfo',
+        //   },
+        // },
+        // {
+        //   $unwind: '$locationInfo',
+        // },
         {
           $project: fieldsToSelect,
         },
       ];
+
       const allProduct = await Product.aggregate(pipeline);
+      console.log('Checkkk all products', { data: allProduct });
 
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,

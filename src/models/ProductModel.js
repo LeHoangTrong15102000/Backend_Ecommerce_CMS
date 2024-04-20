@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema(
   {
@@ -14,14 +14,14 @@ const productSchema = new mongoose.Schema(
     sold: { type: Number },
     type: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "ProductType",
+      ref: 'ProductType',
       required: true,
     },
     location: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "City",
+      ref: 'City',
     },
-    likedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    likedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     totalLikes: { type: Number, default: 0 },
     status: {
       type: Number,
@@ -29,12 +29,12 @@ const productSchema = new mongoose.Schema(
       enum: [0, 1],
     },
     views: { type: Number, default: 0 },
-    uniqueViews: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    uniqueViews: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   },
   {
     timestamps: true,
   }
 );
-const Product = mongoose.model("Product", productSchema);
+const Product = mongoose.model('Product', productSchema);
 
 module.exports = Product;
