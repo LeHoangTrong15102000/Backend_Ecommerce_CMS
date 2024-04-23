@@ -287,7 +287,7 @@ const getAllProductPublic = async (req, res) => {
       status: statusMessage,
     });
   } catch (e) {
-    console.log('e', { e });
+    // console.log('e', { e });
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
       message: 'Internal Server Error',
       data: null,

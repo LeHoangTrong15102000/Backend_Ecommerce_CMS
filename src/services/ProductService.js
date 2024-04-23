@@ -561,7 +561,7 @@ const getAllProduct = (params) => {
       ];
 
       const allProduct = await Product.aggregate(pipeline);
-      console.log('Checkkk all products', { data: allProduct });
+      // console.log('Checkkk all products', { data: allProduct });
 
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
@@ -773,17 +773,18 @@ const getAllProductPublic = (params) => {
         {
           $unwind: '$typeInfo',
         },
-        {
-          $lookup: {
-            from: 'cities',
-            localField: 'location',
-            foreignField: '_id',
-            as: 'locationInfo',
-          },
-        },
-        {
-          $unwind: '$locationInfo',
-        },
+        // Chưa có cities nên là chúng ta sẽ không look up nó
+        // {
+        //   $lookup: {
+        //     from: 'cities',
+        //     localField: 'location',
+        //     foreignField: '_id',
+        //     as: 'locationInfo',
+        //   },
+        // },
+        // {
+        //   $unwind: '$locationInfo',
+        // },
         {
           $project: fieldsToSelect,
         },
