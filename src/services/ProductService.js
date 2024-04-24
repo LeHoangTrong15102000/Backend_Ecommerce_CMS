@@ -253,6 +253,7 @@ const getDetailsProductPublic = (productId, userId) => {
 const getDetailsProductPublicBySlug = (slug, userId) => {
   return new Promise(async (resolve, reject) => {
     try {
+      // Status là 1 có nghĩa là lấy những thằng nào có trạng thái là (public)
       const checkProduct = await Product.aggregate([
         { $match: { slug: slug, status: 1 } },
         {

@@ -22,6 +22,7 @@ router.get('/viewed/me', AuthPermission('', true), ProductController.getAllProdu
 
 router.get('/related', ProductController.getListRelatedProductBySlug);
 
+// Do nó vẫn đang bị trùng về router nên là để phân biệt được thì cần phải đổi lại router
 router.get(
   '/public/slug/:slug',
   AuthPermission('', true, true),
