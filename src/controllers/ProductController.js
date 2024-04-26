@@ -11,6 +11,7 @@ const createProduct = async (req, res) => {
       'countInStock',
       'price',
     ]);
+    // Convert lại giá trị của thằng discountStartDate và discountEndDate trước khi đưa vào database
     const discountValidation = validateDiscountDate(
       req.body.discount,
       new Date(req.body.discountStartDate),
