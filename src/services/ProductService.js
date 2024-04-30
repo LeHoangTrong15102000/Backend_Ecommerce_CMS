@@ -545,17 +545,17 @@ const getAllProduct = (params) => {
         {
           $unwind: '$typeInfo',
         },
-        // {
-        //   $lookup: {
-        //     from: 'cities',
-        //     localField: 'location',
-        //     foreignField: '_id',
-        //     as: 'locationInfo',
-        //   },
-        // },
-        // {
-        //   $unwind: '$locationInfo',
-        // },
+        {
+          $lookup: {
+            from: 'cities',
+            localField: 'location',
+            foreignField: '_id',
+            as: 'locationInfo',
+          },
+        },
+        {
+          $unwind: '$locationInfo',
+        },
         {
           $project: fieldsToSelect,
         },
@@ -775,17 +775,17 @@ const getAllProductPublic = (params) => {
           $unwind: '$typeInfo',
         },
         // Chưa có cities nên là chúng ta sẽ không look up nó
-        // {
-        //   $lookup: {
-        //     from: 'cities',
-        //     localField: 'location',
-        //     foreignField: '_id',
-        //     as: 'locationInfo',
-        //   },
-        // },
-        // {
-        //   $unwind: '$locationInfo',
-        // },
+        {
+          $lookup: {
+            from: 'cities',
+            localField: 'location',
+            foreignField: '_id',
+            as: 'locationInfo',
+          },
+        },
+        {
+          $unwind: '$locationInfo',
+        },
         {
           $project: fieldsToSelect,
         },
