@@ -278,6 +278,7 @@ const cancelOrder = (orderId) => {
   });
 };
 
+// Lấy tất cả order trong cái hệ thống của chúng ta luôn
 const getAllOrder = (params) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -324,9 +325,20 @@ const getAllOrder = (params) => {
 
       const fieldsToSelect = {
         status: 1,
-        email: 1,
+        // email: 1,
+        orderItems: 1,
+        shippingAddress: 1,
+        paymentMethod: 1,
+        deliveryMethod: 1,
+        itemsPrice: 1,
+        shippingPrice: 1,
+        totalPrice: 1,
+        isPaid: 1,
+        paidAt: 1,
+        deliveryAt: 1,
+        isDelivered: 1,
         createdAt: 1,
-        updatedAt: 1,
+        user: 1,
       };
 
       if (page === -1 && limit === -1) {
@@ -367,7 +379,7 @@ const getAllOrder = (params) => {
   });
 };
 
-// ** Me
+// ** Me - Lấy order của thằng user đang đăng nhập
 const getAllOrderOfMe = (userId, params) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -404,9 +416,19 @@ const getAllOrderOfMe = (userId, params) => {
 
       const fieldsToSelect = {
         status: 1,
-        email: 1,
+        // email: 1,
+        orderItems: 1,
+        shippingAddress: 1,
+        paymentMethod: 1,
+        deliveryMethod: 1,
+        itemsPrice: 1,
+        shippingPrice: 1,
+        totalPrice: 1,
+        isPaid: 1,
+        paidAt: 1,
+        deliveryAt: 1,
+        isDelivered: 1,
         createdAt: 1,
-        updatedAt: 1,
         user: 1,
       };
       console.log('query', { query });
@@ -414,6 +436,20 @@ const getAllOrderOfMe = (userId, params) => {
         .skip(startIndex)
         .limit(limit)
         .sort(sortOptions)
+        .populate([
+          {
+            path: 'user',
+            select: '_id firstName middleName lastName',
+          },
+          {
+            path: 'deliveryMethod',
+            select: 'name price',
+          },
+          {
+            path: 'paymentMethod',
+            select: 'name type',
+          },
+        ])
         .select(fieldsToSelect);
 
       resolve({
