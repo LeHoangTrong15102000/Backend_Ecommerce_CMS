@@ -378,6 +378,7 @@ const getAllOrderOfMe = (userId, params) => {
       const product = params.product ?? '';
       const status = params.status ?? '';
       const query = buildQuery(search);
+      // thì phải query như thế này thì mới đúng
       query.user = mongoose.Types.ObjectId(userId);
       const { startIndex, sortOptions } = preparePaginationAndSorting(page, limit, order);
 

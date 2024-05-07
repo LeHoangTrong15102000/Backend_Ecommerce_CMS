@@ -16,6 +16,7 @@ router.put(
   OrderController.updateOrder
 );
 
+// Phải đưa thằng này lên trước không thì nó sẽ call xuống /:orderId trước
 router.get('/me', AuthPermission('', true), OrderController.getAllOrderOfMe);
 
 router.get(
