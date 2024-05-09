@@ -182,6 +182,7 @@ const updateAuthMe = (id, data, isPermission) => {
         return;
       }
 
+      // Nếu có truyền lên addresses thì chúng ta mới xử lý
       if (data.addresses) {
         const defaultAddresses = data.addresses.filter((address) => address.isDefault);
         if (defaultAddresses.length > 1) {
