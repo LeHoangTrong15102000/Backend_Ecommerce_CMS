@@ -1,5 +1,6 @@
-const { CONFIG_MESSAGE_ERRORS } = require('../configs');
+const { CONFIG_MESSAGE_ERRORS, PAYMENT_TYPES } = require('../configs');
 const Order = require('../models/OrderProduct');
+const PaymentType = require('../models/PaymentType');
 const Product = require('../models/ProductModel');
 const EmailService = require('../services/EmailService');
 const { preparePaginationAndSorting, buildQuery } = require('../utils');
@@ -96,7 +97,14 @@ const createOrder = (newOrder) => {
           dataCreate.deliveryMethod = deliveryMethod;
         }
         if (paymentMethod) {
+          const findPayment = await PaymentType.findById(paymentMethod);
           dataCreate.paymentMethod = paymentMethod;
+          if (findPayment.type !== PAYMENT_TYPES.PAYMENT_LATER) {
+            // Tại vì PAYMENT_LATER là phương thức nhận hàng khi thanh toán
+            // Nếu như nó khác thằng PAYMENT_LATER có nghĩa là chờ thanh toán
+            // Thì lúc này khi mà là thanh toán sau thì nó sẽ mặc định `chờ giao hàng`
+            dataCreate.status = 0;
+          }
         }
         const createdOrder = await Order.create(dataCreate);
         if (createdOrder) {
