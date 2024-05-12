@@ -298,8 +298,14 @@ const getAllOrder = (params) => {
       const productId = params.productId ?? '';
       const status = params.status ?? '';
       const cityId = params.cityId ?? '';
+      const query = {};
+      // const query = buildQuery(search);
 
-      const query = buildQuery(search);
+      if (search) {
+        const searchRegex = { $regex: search, $options: 'i' };
+
+        query.$or = [{ 'orderItems.name': searchRegex }];
+      }
 
       const { startIndex, sortOptions } = preparePaginationAndSorting(page, limit, order);
 
@@ -335,9 +341,9 @@ const getAllOrder = (params) => {
         status: 1,
         // email: 1,
         orderItems: 1,
-        shippingAddress: 1,
-        paymentMethod: 1,
-        deliveryMethod: 1,
+        // shippingAddress: 1,
+        // paymentMethod: 1,
+        // deliveryMethod: 1,
         itemsPrice: 1,
         shippingPrice: 1,
         totalPrice: 1,
@@ -345,8 +351,8 @@ const getAllOrder = (params) => {
         paidAt: 1,
         deliveryAt: 1,
         isDelivered: 1,
-        createdAt: 1,
-        user: 1,
+        // createdAt: 1,
+        // user: 1,
       };
 
       if (page === -1 && limit === -1) {
@@ -397,9 +403,17 @@ const getAllOrderOfMe = (userId, params) => {
       const order = params?.order ?? 'created desc';
       const product = params.product ?? '';
       const status = params.status ?? '';
-      const query = buildQuery(search);
+      // const query = buildQuery(search);
+      const query = {};
       // thì phải query như thế này thì mới đúng
       query.user = mongoose.Types.ObjectId(userId);
+
+      if (search) {
+        const searchRegex = { $regex: search, $options: 'i' };
+
+        query.$or = [{ 'orderItems.name': searchRegex }];
+      }
+
       const { startIndex, sortOptions } = preparePaginationAndSorting(page, limit, order);
 
       if (product) {
@@ -426,9 +440,9 @@ const getAllOrderOfMe = (userId, params) => {
         status: 1,
         // email: 1,
         orderItems: 1,
-        shippingAddress: 1,
-        paymentMethod: 1,
-        deliveryMethod: 1,
+        // shippingAddress: 1,
+        // paymentMethod: 1,
+        // deliveryMethod: 1,
         itemsPrice: 1,
         shippingPrice: 1,
         totalPrice: 1,
@@ -436,8 +450,8 @@ const getAllOrderOfMe = (userId, params) => {
         paidAt: 1,
         deliveryAt: 1,
         isDelivered: 1,
-        createdAt: 1,
-        user: 1,
+        // createdAt: 1,
+        // user: 1,
       };
       console.log('query', { query });
       const allOrder = await Order.find(query)
