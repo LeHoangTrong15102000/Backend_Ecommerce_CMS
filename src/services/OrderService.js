@@ -440,7 +440,7 @@ const getAllOrderOfMe = (userId, params) => {
         status: 1,
         // email: 1,
         orderItems: 1,
-        // shippingAddress: 1,
+        shippingAddress: 1,
         // paymentMethod: 1,
         // deliveryMethod: 1,
         itemsPrice: 1,
