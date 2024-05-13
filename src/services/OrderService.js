@@ -402,7 +402,7 @@ const getAllOrderOfMe = (userId, params) => {
       const page = params?.page ?? 1;
       const order = params?.order ?? 'created desc';
       const product = params.product ?? '';
-      const status = params.status ?? '';
+      const status = params.status ?? 1;
       // const query = buildQuery(search);
       const query = {};
       // thì phải query như thế này thì mới đúng
@@ -440,11 +440,11 @@ const getAllOrderOfMe = (userId, params) => {
         status: 1,
         // email: 1,
         orderItems: 1,
-        shippingAddress: 1,
+        // shippingAddress: 1,
         // paymentMethod: 1,
         // deliveryMethod: 1,
-        itemsPrice: 1,
-        shippingPrice: 1,
+        // itemsPrice: 1,
+        // shippingPrice: 1,
         totalPrice: 1,
         isPaid: 1,
         paidAt: 1,
@@ -537,8 +537,8 @@ const getDetailsOrderOfMe = (userId, orderId) => {
 const cancelOrderOfMe = (userId, orderId) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const order = await Order.findById(orderId);
-      if (!order) {
+      const checkOrder = await Order.findById(orderId);
+      if (!checkOrder) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
           message: 'The Order is not existed',
@@ -549,7 +549,7 @@ const cancelOrderOfMe = (userId, orderId) => {
         return;
       }
 
-      if (checkOrder.user !== userId) {
+      if (checkOrder.user?.toString() !== userId) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.UNAUTHORIZED.status,
           message: 'You no has permission',
@@ -560,7 +560,7 @@ const cancelOrderOfMe = (userId, orderId) => {
         return;
       }
 
-      if (order.isPaid === 1) {
+      if (checkOrder.isPaid === 1) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
           message: 'Cannot cancel order that has been paid',
@@ -571,13 +571,13 @@ const cancelOrderOfMe = (userId, orderId) => {
         return;
       }
 
-      order.status = 3;
-      await order.save();
+      checkOrder.status = 3;
+      await checkOrder.save();
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
         message: 'Order cancelled successfully',
         typeError: '',
-        data: order,
+        data: checkOrder,
         statusMessage: 'Success',
       });
     } catch (error) {

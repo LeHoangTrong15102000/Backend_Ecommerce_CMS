@@ -53,7 +53,7 @@ const orderSchema = new mongoose.Schema(
       enum: [0, 1],
     },
     status: {
-      type: String,
+      type: Number,
       enum: [0, 1, 2, 3], // 0: wait payment, 1: wait delivery, 2: done, 3, cancel
       default: 1,
     },
