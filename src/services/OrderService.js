@@ -471,6 +471,11 @@ const getAllOrderOfMe = (userId, params) => {
             path: 'paymentMethod',
             select: 'name type',
           },
+          {
+            path: 'orderItems.product',
+            select: 'countInStock slug',
+            model: 'Product',
+          },
         ])
         .select(fieldsToSelect);
 
