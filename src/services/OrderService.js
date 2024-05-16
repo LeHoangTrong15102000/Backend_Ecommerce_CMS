@@ -502,6 +502,9 @@ const getDetailsOrderOfMe = (userId, orderId) => {
       try {
         const checkOrder = await Order.findById({
           _id: orderId,
+        }).populate({
+          path: 'shippingAddress.city',
+          select: '_id name',
         });
         if (checkOrder === null) {
           resolve({
