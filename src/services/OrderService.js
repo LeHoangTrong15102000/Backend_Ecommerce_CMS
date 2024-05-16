@@ -500,7 +500,7 @@ const getDetailsOrderOfMe = (userId, orderId) => {
   return new Promise(async (resolve, reject) => {
     try {
       try {
-        const checkOrder = await checkOrder.findById({
+        const checkOrder = await Order.findById({
           _id: orderId,
         });
         if (checkOrder === null) {
@@ -513,7 +513,9 @@ const getDetailsOrderOfMe = (userId, orderId) => {
           });
           return;
         }
-        if (checkOrder.user !== userId) {
+        // Phải chuyển sang dạng string vì user đang là objectId
+        // thz đăng nhập có bằng với trường user ở trong orderItem này hay không, nên phải convert về string
+        if (checkOrder?.user?.toString() !== userId) {
           resolve({
             status: CONFIG_MESSAGE_ERRORS.UNAUTHORIZED.status,
             message: 'You no has permission',
