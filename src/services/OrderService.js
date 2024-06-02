@@ -160,7 +160,7 @@ const deleteOrderProduct = (id) => {
       if (!checkOrder) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: 'The product is not existed',
+          message: 'The order product is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
           statusMessage: 'Error',
@@ -191,7 +191,7 @@ const deleteOrderProduct = (id) => {
 
       resolve({
         message: 'Order deleted successfully',
-        status: CONFIG_MESSAGE_ERRORS.AC.status,
+        status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
         typeError: '',
         statusMessage: 'Success',
         data: deletedOrder,
@@ -311,26 +311,26 @@ const getAllOrder = (params) => {
 
       if (userId) {
         const userIds = userId?.split('|').map((id) => mongoose.Types.ObjectId(id));
-        query.type =
+        query.user =
           userIds.length > 1 ? { $in: userIds } : mongoose.Types.ObjectId(userId);
       }
 
       if (productId) {
         const productIds = productId?.split('|').map((id) => mongoose.Types.ObjectId(id));
-        query.type =
+        query.product =
           productIds.length > 1
             ? { $in: productIds }
             : mongoose.Types.ObjectId(productId);
       }
       if (cityId) {
         const cityIds = cityId?.split('|').map((id) => mongoose.Types.ObjectId(id));
-        query.type =
+        query['shippingAddress.city'] =
           cityIds.length > 1 ? { $in: cityIds } : mongoose.Types.ObjectId(cityId);
       }
 
       if (status) {
-        const status = status?.split('|').map((id) => id);
-        query.type = { $in: status };
+        const statusOrder = status?.split('|').map((id) => id);
+        query.status = { $in: statusOrder };
       }
 
       const totalCount = await Order.countDocuments(query);
@@ -341,22 +341,28 @@ const getAllOrder = (params) => {
         status: 1,
         // email: 1,
         orderItems: 1,
-        // shippingAddress: 1,
-        // paymentMethod: 1,
+        shippingAddress: 1,
+        paymentMethod: 1,
         // deliveryMethod: 1,
-        itemsPrice: 1,
+        // itemsPrice: 1,
         shippingPrice: 1,
         totalPrice: 1,
-        isPaid: 1,
-        paidAt: 1,
+        // isPaid: 1,
+        // paidAt: 1,
         deliveryAt: 1,
-        isDelivered: 1,
+        // isDelivered: 1,
         // createdAt: 1,
         // user: 1,
       };
 
       if (page === -1 && limit === -1) {
-        const allOrder = await Order.find(query).sort(sortOptions).select(fieldsToSelect);
+        const allOrder = await Order.find(query)
+          .sort(sortOptions)
+          .select(fieldsToSelect)
+          .populate({
+            path: 'shippingAddress.city',
+            select: '_id name',
+          });
         resolve({
           status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
           message: 'Success',
@@ -375,7 +381,11 @@ const getAllOrder = (params) => {
         .skip(startIndex)
         .limit(limit)
         .sort(sortOptions)
-        .select(fieldsToSelect);
+        .select(fieldsToSelect)
+        .populate({
+          path: 'shippingAddress.city',
+          select: '_id name',
+        });
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
         message: 'Success',
