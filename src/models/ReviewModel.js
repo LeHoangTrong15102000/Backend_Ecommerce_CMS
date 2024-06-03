@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const ReviewSchema = new mongoose.Schema(
   {
@@ -6,12 +6,12 @@ const ReviewSchema = new mongoose.Schema(
     star: { type: Number, required: true, min: 1, max: 5 },
     product: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
+      ref: 'Product',
       required: true,
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
   },
@@ -19,6 +19,6 @@ const ReviewSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-const Review = mongoose.model("Review", ReviewSchema);
+const Review = mongoose.model('Review', ReviewSchema);
 
 module.exports = Review;

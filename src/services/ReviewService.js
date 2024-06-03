@@ -221,6 +221,8 @@ const getAllReview = (params) => {
       const order = params?.order ?? 'created desc';
       const userId = params.userId ?? '';
       const productId = params.productId ?? '';
+      const minStar = +params?.minStar || 0;
+      const maxStar = +params?.maxStar || 5;
 
       const query = buildQuery(search);
 
@@ -240,10 +242,13 @@ const getAllReview = (params) => {
             : mongoose.Types.ObjectId(productId);
       }
 
+      if (minStar !== null || maxStar !== null) {
+      }
+
       if (search) {
         const searchRegex = { $regex: search, $options: 'i' };
 
-        query.$or = [{ email: searchRegex }];
+        query.$or = [{ content: searchRegex }];
       }
 
       const totalCount = await Review.countDocuments(query);
@@ -254,16 +259,23 @@ const getAllReview = (params) => {
         content: 1,
         star: 1,
         user: 1,
+        product: 1,
       };
 
       if (page === -1 && limit === -1) {
         const allReview = await Review.find(query)
           .sort(sortOptions)
           .select(fieldsToSelect)
-          .populate({
-            path: 'user',
-            select: 'avatar firstName lastName middleName',
-          });
+          .populate([
+            {
+              path: 'user',
+              select: 'firstName lastName middleName _id',
+            },
+            {
+              path: 'product',
+              select: 'name _id',
+            },
+          ]);
 
         resolve({
           status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
@@ -284,10 +296,16 @@ const getAllReview = (params) => {
         .limit(limit)
         .sort(sortOptions)
         .select(fieldsToSelect)
-        .populate({
-          path: 'user',
-          select: 'avatar firstName lastName middleName',
-        });
+        .populate([
+          {
+            path: 'user',
+            select: 'firstName lastName middleName _id',
+          },
+          {
+            path: 'product',
+            select: 'name _id',
+          },
+        ]);
       resolve({
         status: CONFIG_MESSAGE_ERRORS.GET_SUCCESS.status,
         message: 'Success',
