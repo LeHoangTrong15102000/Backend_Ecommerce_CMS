@@ -267,10 +267,13 @@ const getAllReview = (params) => {
           .sort(sortOptions)
           .select(fieldsToSelect)
           .populate([
+            // Đây là cách mà chúng ta lấy ra các thông tin từ các mối quan hệ của nó thông qua mongodb
+            // Lấy ra những thông tin của user thông qua id của nó trong cái bảng review
             {
               path: 'user',
               select: 'firstName lastName middleName _id',
             },
+            // Lấy ra những thông tin của product thông qua id của nó trong bảng review
             {
               path: 'product',
               select: 'name _id',
