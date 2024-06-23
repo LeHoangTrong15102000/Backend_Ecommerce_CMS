@@ -512,10 +512,17 @@ const getDetailsOrderOfMe = (userId, orderId) => {
       try {
         const checkOrder = await Order.findById({
           _id: orderId,
-        }).populate({
-          path: 'shippingAddress.city',
-          select: '_id name',
-        });
+        }).populate([
+          {
+            path: 'shippingAddress.city',
+            select: '_id name',
+          },
+          {
+            path: 'orderItems.product',
+            select: 'countInStock slug',
+            model: 'Product',
+          },
+        ]);
         if (checkOrder === null) {
           resolve({
             status: CONFIG_MESSAGE_ERRORS.INVALID.status,
