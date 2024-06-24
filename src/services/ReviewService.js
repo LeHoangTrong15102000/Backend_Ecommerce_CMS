@@ -260,6 +260,7 @@ const getAllReview = (params) => {
         star: 1,
         user: 1,
         product: 1,
+        updatedAt: 1,
       };
 
       if (page === -1 && limit === -1) {
