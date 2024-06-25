@@ -1,21 +1,21 @@
-const { CONFIG_MESSAGE_ERRORS } = require("../configs");
-const ReviewService = require("../services/ReviewService");
-const { validateRequiredInput } = require("../utils");
+const { CONFIG_MESSAGE_ERRORS } = require('../configs');
+const ReviewService = require('../services/ReviewService');
+const { validateRequiredInput } = require('../utils');
 
 const createReview = async (req, res) => {
   try {
     const requiredFields = validateRequiredInput(req.body, [
-      "content",
-      "star",
-      "user",
-      "product",
+      'content',
+      'star',
+      'user',
+      'product',
     ]);
 
     if (requiredFields?.length) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
-        message: `The field ${requiredFields.join(", ")} is required`,
+        message: `The field ${requiredFields.join(', ')} is required`,
         data: null,
       });
     }
@@ -29,9 +29,9 @@ const createReview = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
       typeError: CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.type,
     });
   }
@@ -42,7 +42,7 @@ const updateReview = async (req, res) => {
     const reviewId = req.params.id;
     if (!reviewId) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
         message: `The field reviewId is required`,
       });
@@ -57,9 +57,9 @@ const updateReview = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
       typeError: CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.type,
     });
   }
@@ -70,7 +70,7 @@ const getDetailsReview = async (req, res) => {
     const reviewId = req.params.id;
     if (!reviewId) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
         message: `The field reviewId is required`,
         data: null,
@@ -86,9 +86,9 @@ const getDetailsReview = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
       typeError: CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.type,
     });
   }
@@ -99,7 +99,7 @@ const deleteReview = async (req, res) => {
     const reviewId = req.params.id;
     if (!reviewId) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
         message: `The field reviewId is required`,
         data: null,
@@ -115,9 +115,9 @@ const deleteReview = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
       typeError: CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.type,
     });
   }
@@ -129,7 +129,7 @@ const deleteReviewMine = async (req, res) => {
     const userId = req.userId;
     if (!reviewId) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
         message: `The field reviewId is required`,
         data: null,
@@ -145,9 +145,9 @@ const deleteReviewMine = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
       typeError: CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.type,
     });
   }
@@ -158,7 +158,7 @@ const deleteMany = async (req, res) => {
     const ids = req.body.reviewIds;
     if (!ids || !ids.length) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
         message: `The field reviewIds is required`,
         data: null,
@@ -174,9 +174,9 @@ const deleteMany = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
       typeError: CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.type,
     });
   }
@@ -195,9 +195,9 @@ const getAllReview = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
       typeError: CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.type,
     });
   }
@@ -209,16 +209,12 @@ const updateReviewMine = async (req, res) => {
     const userId = req.userId;
     if (!reviewId) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
         message: `The field reviewId is required`,
       });
     }
-    const response = await ReviewService.updateReviewMine(
-      reviewId,
-      userId,
-      req.body
-    );
+    const response = await ReviewService.updateReviewMine(reviewId, userId, req.body);
     const { data, status, typeError, message, statusMessage } = response;
     return res.status(status).json({
       typeError,
@@ -227,10 +223,11 @@ const updateReviewMine = async (req, res) => {
       status: statusMessage,
     });
   } catch (e) {
+    console.log('checkk error', e);
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
       typeError: CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.type,
     });
   }
@@ -244,5 +241,5 @@ module.exports = {
   getAllReview,
   deleteMany,
   updateReviewMine,
-  deleteReviewMine
+  deleteReviewMine,
 };

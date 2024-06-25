@@ -6,13 +6,14 @@ const { CONFIG_PERMISSIONS } = require('../configs');
 
 router.post('/', ReviewController.createReview);
 
+// Phải đưa thằng số nhiều lên không thôi mỗi lần nó chạy tới /me thì nó sẽ tưởng `/me` là `/:id` và nó sẽ chạy thằng kia trước
+router.put('/me/:id', AuthPermission('', true), ReviewController.updateReviewMine);
+
 router.put(
   '/:id',
   AuthPermission(CONFIG_PERMISSIONS.MANAGE_ORDER.REVIEW.UPDATE),
   ReviewController.updateReview
 );
-
-router.put('/me/:id', AuthPermission('', true), ReviewController.updateReviewMine);
 
 router.get('/:id', ReviewController.getDetailsReview);
 

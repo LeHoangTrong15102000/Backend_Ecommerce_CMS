@@ -73,7 +73,7 @@ const updateReviewMine = (reviewId, userId, data) => {
           data: null,
           statusMessage: 'Error',
         });
-      } else if (userId !== checkReview.user) {
+      } else if (userId !== checkReview?.user?.toString()) {
         reject({
           status: CONFIG_MESSAGE_ERRORS.UNAUTHORIZED.status,
           message: 'Unauthorized',
@@ -83,14 +83,18 @@ const updateReviewMine = (reviewId, userId, data) => {
         });
       }
 
-      const updatedReview = await Review.findByIdAndUpdate(id, data, {
-        new: true,
-      });
+      // const updatedReview = await Review.findByIdAndUpdate(id, data, {
+      //   new: true,
+      // });
+      checkReview.content = data.content || checkReview.content;
+      checkReview.star = data.star || checkReview.star;
+      const saveReview = await checkReview.save();
+
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
         message: 'Updated review success',
         typeError: '',
-        data: updatedReview,
+        data: saveReview,
         statusMessage: 'Success',
       });
     } catch (e) {
@@ -143,7 +147,7 @@ const deleteReviewMine = (reviewId, userId) => {
           data: null,
           statusMessage: 'Error',
         });
-      } else if (userId !== checkReview.user) {
+      } else if (userId !== checkReview?.user?.toString()) {
         reject({
           status: CONFIG_MESSAGE_ERRORS.UNAUTHORIZED.status,
           message: 'Unauthorized',
@@ -215,9 +219,9 @@ const getDetailsReview = (id) => {
 const getAllReview = (params) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const limit = params?.limit ?? 10;
+      const limit = +params?.limit ?? 10;
       const search = params?.search ?? '';
-      const page = params?.page ?? 1;
+      const page = +params?.page ?? 1;
       const order = params?.order ?? 'created desc';
       const userId = params.userId ?? '';
       const productId = params.productId ?? '';
@@ -243,6 +247,13 @@ const getAllReview = (params) => {
       }
 
       if (minStar !== null || maxStar !== null) {
+        query.star = {};
+        if (minStar !== null) {
+          query.star.$gte = minStar;
+        }
+        if (maxStar !== null) {
+          query.star.$lte = maxStar;
+        }
       }
 
       if (search) {
@@ -272,7 +283,7 @@ const getAllReview = (params) => {
             // Lấy ra những thông tin của user thông qua id của nó trong cái bảng review
             {
               path: 'user',
-              select: 'firstName lastName middleName _id',
+              select: 'firstName lastName middleName _id avatar',
             },
             // Lấy ra những thông tin của product thông qua id của nó trong bảng review
             {
@@ -303,7 +314,7 @@ const getAllReview = (params) => {
         .populate([
           {
             path: 'user',
-            select: 'firstName lastName middleName _id',
+            select: 'firstName lastName middleName _id avatar',
           },
           {
             path: 'product',
